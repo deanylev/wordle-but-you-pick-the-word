@@ -7,6 +7,7 @@ import Keyboard, { Letter } from '../../components/Keyboard';
 import { OnToast } from '../../components/Toaster';
 import TileRow from '../../components/TileRow';
 import fetchApi from '../../utils/fetchApi';
+import getLetterCounts from '../../utils/getLetterCounts';
 import getRandomElement from '../../utils/getRandomElement';
 import makeUnique from '../../utils/makeUnique';
 
@@ -241,19 +242,23 @@ export default class PlayPage extends Component<Props, State> {
   }
 
   async handleShare() {
-    const { absentLetters, activeWordIndex, correctLetters, presentLetters, status, words } = this.state;
+    const { absentLetters, activeWordIndex, correctLetters, presentLetters, status, word: actualWord, words } = this.state;
     const row = status === 'won' ? activeWordIndex + 1 : 'X';
     const emojis = words.slice(0, activeWordIndex + 1).map((word) => {
+      const letterCounts = getLetterCounts(actualWord);
+
       return word.map((letter, index) => {
-        if (absentLetters.includes(letter)) {
+        if (absentLetters.includes(letter) || letterCounts[letter] === 0) {
           return '⬛';
         }
 
         if (correctLetters[index] === letter) {
+          letterCounts[letter]--;
           return '🟩';
         }
 
         if (presentLetters.includes(letter)) {
+          letterCounts[letter]--;
           return '🟨';
         }
 
@@ -276,7 +281,7 @@ export default class PlayPage extends Component<Props, State> {
   }
 
   render() {
-    const { absentLetters, activeWordIndex, boardHeight, boardWidth, correctLetters, goHome, loading, modalOpen, presentLetters, shake, status, word, words } = this.state;
+    const { absentLetters, activeWordIndex, boardHeight, boardWidth, correctLetters, goHome, loading, modalOpen, presentLetters, shake, status, word: actualWord, words } = this.state;
 
     if (goHome) {
       return <Navigate to="/" />
@@ -284,7 +289,7 @@ export default class PlayPage extends Component<Props, State> {
 
     if (loading) {
       return <div className="PlayPage-status">Loading...</div>;
-    } else if (!word) {
+    } else if (!actualWord) {
       return <div className="PlayPage-status">Word not found</div>;
     }
 
@@ -299,6 +304,7 @@ export default class PlayPage extends Component<Props, State> {
                 <TileRow
                   absentLetters={absentLetters}
                   active={active}
+                  actualWord={actualWord}
                   correctLetters={correctLetters}
                   done={(won || status === 'lost') && active}
                   key={index}
