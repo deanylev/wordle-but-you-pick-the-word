@@ -8,10 +8,11 @@ interface Toast {
   message: string;
 }
 
+export type OnClearToasts = typeof Toaster.prototype.handleClearToasts;
 export type OnToast = typeof Toaster.prototype.handleToast;
 
 interface Props {
-  children: (onToast: OnToast) => ReactNode;
+  children: (onToast: OnToast, onClearToasts: OnClearToasts) => ReactNode;
 }
 
 interface State {
@@ -28,7 +29,14 @@ export default class Toaster extends Component<Props, State> {
       toasts: {}
     };
 
+    this.handleClearToasts = this.handleClearToasts.bind(this);
     this.handleToast = this.handleToast.bind(this);
+  }
+
+  handleClearToasts() {
+    this.setState({
+      toasts: {}
+    });
   }
 
   async handleToast(message: string, timeout: number | null = 1000) {
@@ -73,7 +81,7 @@ export default class Toaster extends Component<Props, State> {
             </div>
           ))}
         </div>
-        {this.props.children(this.handleToast)}
+        {this.props.children(this.handleToast, this.handleClearToasts)}
       </div>
     );
   }

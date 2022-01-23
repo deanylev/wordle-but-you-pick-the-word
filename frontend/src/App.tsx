@@ -12,11 +12,11 @@ function App() {
       <div className="title">WORDLE</div>
       <div className="subtitle">(but you pick the word)</div>
       <Toaster>
-        {(onToast) => (
+        {(onToast, onClearToasts) => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<CreatePage onToast={onToast} />} />
-              <Route path="/:short" element={<PlayPage onToast={onToast} />} />
+              <Route path="/:short" element={<PlayPage onClearToasts={onClearToasts} onToast={onToast} />} />
             </Routes>
           </BrowserRouter>
         )}

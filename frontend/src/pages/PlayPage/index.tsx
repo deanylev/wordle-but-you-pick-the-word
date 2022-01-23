@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import { Navigate } from 'react-router-dom';
 
 import Keyboard, { Letter } from '../../components/Keyboard';
-import { OnToast } from '../../components/Toaster';
+import { OnClearToasts, OnToast } from '../../components/Toaster';
 import TileRow from '../../components/TileRow';
 import fetchApi from '../../utils/fetchApi';
 import getLetterCounts from '../../utils/getLetterCounts';
@@ -14,6 +14,7 @@ import makeUnique from '../../utils/makeUnique';
 import './style.scss';
 
 interface Props {
+  onClearToasts: OnClearToasts;
   onToast: OnToast;
 }
 
@@ -99,6 +100,7 @@ export default class PlayPage extends Component<Props, State> {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
+    this.props.onClearToasts();
   }
 
   handleBackspace() {
@@ -344,7 +346,7 @@ export default class PlayPage extends Component<Props, State> {
           }}
         >
           <div className="PlayPage-modal">
-            A website by Dean Levinson
+            <div>A website by <a href="https://deanlevinson.com.au" rel="noopener" target="_blank">Dean Levinson</a></div>
             <button onClick={() => this.setState({ goHome: true })}>
               CHOOSE YOUR OWN
             </button>

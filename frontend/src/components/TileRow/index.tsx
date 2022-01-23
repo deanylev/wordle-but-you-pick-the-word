@@ -50,7 +50,7 @@ export default class TileRow extends Component<Props> {
 
   render() {
     const { actualWord, shake, won, word } = this.props;
-    const letterCounts = actualWord && getLetterCounts(actualWord) || undefined;
+    const letterCounts = (actualWord && getLetterCounts(actualWord)) || undefined;
     return (
       <div className={`TileRow ${shake ? 'shake' : ''}`}>
         {Array.from(new Array(5), (_, index) => {
