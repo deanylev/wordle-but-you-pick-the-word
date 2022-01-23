@@ -7,7 +7,7 @@ import Keyboard, { Letter } from '../../components/Keyboard';
 import { OnClearToasts, OnToast } from '../../components/Toaster';
 import TileRow from '../../components/TileRow';
 import fetchApi from '../../utils/fetchApi';
-import getLetterCounts from '../../utils/getLetterCounts';
+import getLetterStatuses from '../../utils/getLetterStatuses';
 import getRandomElement from '../../utils/getRandomElement';
 import makeUnique from '../../utils/makeUnique';
 
@@ -247,20 +247,32 @@ export default class PlayPage extends Component<Props, State> {
     const { absentLetters, activeWordIndex, correctLetters, presentLetters, status, word: actualWord, words } = this.state;
     const row = status === 'won' ? activeWordIndex + 1 : 'X';
     const emojis = words.slice(0, activeWordIndex + 1).map((word) => {
-      const letterCounts = getLetterCounts(actualWord);
-
-      return word.map((letter, index) => {
-        if (absentLetters.includes(letter) || letterCounts[letter] === 0) {
-          return '⬛';
+      const normalisedLettersSortedByStatus = getLetterStatuses(actualWord, word, (letter, index) => {
+        if (absentLetters.includes(letter)) {
+          return 'absent';
         }
 
         if (correctLetters[index] === letter) {
-          letterCounts[letter]--;
-          return '🟩';
+          return 'correct';
         }
 
         if (presentLetters.includes(letter)) {
-          letterCounts[letter]--;
+          return 'present';
+        }
+
+        return undefined;
+      });
+
+      return normalisedLettersSortedByStatus.map(({ status }) => {
+        if (status === 'absent') {
+          return '⬛';
+        }
+
+        if (status === 'correct') {
+          return '🟩';
+        }
+
+        if (status === 'present') {
           return '🟨';
         }
 

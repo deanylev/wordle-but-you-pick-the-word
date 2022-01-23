@@ -4,7 +4,7 @@ import { Letter } from '../Keyboard';
 
 import './style.scss';
 
-type Status = 'absent' | 'correct' | 'present';
+export type Status = 'absent' | 'correct' | 'present';
 
 interface Props {
   bounce?: boolean;

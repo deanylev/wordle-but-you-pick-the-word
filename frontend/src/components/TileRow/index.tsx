@@ -1,9 +1,9 @@
 import { Component } from 'react';
 
 import { Letter } from '../Keyboard';
-import Tile from '../Tile';
+import Tile, { Status } from '../Tile';
 
-import getLetterCounts from '../../utils/getLetterCounts';
+import getLetterStatuses from '../../utils/getLetterStatuses';
 
 import './style.scss';
 
@@ -20,28 +20,22 @@ interface Props {
 }
 
 export default class TileRow extends Component<Props> {
-  getStatus(letter: Letter, index: number, letterCounts?: Record<string, number>) {
+  getStatus(letter: Letter, index: number) {
     const { absentLetters, active, correctLetters, done, presentLetters } = this.props;
 
     if ((active && !done) || !(letter && absentLetters && correctLetters && presentLetters)) {
       return undefined;
     }
 
-    if (absentLetters.includes(letter) || letterCounts?.[letter] === 0) {
+    if (absentLetters.includes(letter) ) {
       return 'absent';
     }
 
     if (correctLetters[index] === letter) {
-      if (letterCounts) {
-        letterCounts[letter]--;
-      }
       return 'correct';
     }
 
     if (presentLetters.includes(letter)) {
-      if (letterCounts) {
-        letterCounts[letter]--;
-      }
       return 'present';
     }
 
@@ -50,18 +44,45 @@ export default class TileRow extends Component<Props> {
 
   render() {
     const { actualWord, shake, won, word } = this.props;
-    const letterCounts = (actualWord && getLetterCounts(actualWord)) || undefined;
+    const lettersSortedByStatus = word
+      .map((letter, index) => ({
+        letter,
+        originalIndex: index,
+        status: this.getStatus(letter, index) as Status
+      }))
+      .sort(({ status: a }, { status: b }) => {
+        if (a === b) {
+          return 0;
+        }
+
+        if (a === 'correct') {
+          return -1;
+        }
+
+        if (b === 'correct') {
+          return 1;
+        }
+
+        if (a === 'present') {
+          return 1;
+        }
+
+        return -1;
+      });
+
+    const normalisedLettersSortedByStatus = getLetterStatuses(actualWord ?? '', word, this.getStatus.bind(this));
+
     return (
       <div className={`TileRow ${shake ? 'shake' : ''}`}>
         {Array.from(new Array(5), (_, index) => {
-          const letter = word[index];
+          const { letter = null, status } = normalisedLettersSortedByStatus[index] || {};
           return (
             <Tile
               bounce={won}
               index={index}
               key={index}
               letter={letter}
-              status={this.getStatus(letter, index, letterCounts)}
+              status={status}
             />
           );
         })}
