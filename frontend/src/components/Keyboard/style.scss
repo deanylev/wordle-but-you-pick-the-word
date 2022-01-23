@@ -1,0 +1,47 @@
+.Keyboard {
+  min-width: 100%;
+
+  > div {
+    display: flex;
+    margin: 0 8px 8px;
+
+    > button {
+      background: #818384;
+      border: 0;
+      border-radius: 4px;
+      color: #d7dadc;
+      cursor: pointer;
+      flex: 1;
+      font-size: 13.3px;
+      font-weight: 700;
+      height: 58px;
+      text-transform: uppercase;
+      user-select: none;
+
+      &:not(:last-of-type) {
+        margin-right: 6px;
+      }
+
+      &.absent {
+        background: #3a3a3c;
+      }
+
+      &.correct {
+        background: #538d4e;
+      }
+
+      &.present {
+        background: #b59f3b;
+      }
+
+      &.wide {
+        flex: 1.5;
+        font-size: 12px;
+      }
+    }
+
+    > div {
+      flex: 0.5;
+    }
+  }
+}

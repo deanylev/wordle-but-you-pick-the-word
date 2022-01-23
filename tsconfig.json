@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "commonjs",
+    "paths": {
+      "*": [
+        "node_modules/@types/*",
+        "@types/*"
+      ]
+    },
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es2019",
+    "typeRoots": ["./@types", "./node_modules/@types"]
+  },
+  "files": ["start.ts"],
+  "include": ["app/tasks/*.ts", "scripts/*.ts"]
+}

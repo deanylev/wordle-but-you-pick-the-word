@@ -1,0 +1,104 @@
+@keyframes bounce {
+  0%,
+  20% {
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(-30px);
+  }
+
+  50% {
+    transform: translateY(5px);
+  }
+
+  60% {
+    transform: translateY(-15px);
+  }
+
+  80% {
+    transform: translateY(2px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes flip-in {
+  0% {
+    transform: rotateX(0);
+  }
+
+  100% {
+    transform: rotateX(-90deg);
+  }
+}
+
+@keyframes flip-out {
+  0% {
+    transform: rotateX(-90deg);
+  }
+
+  100% {
+    transform: rotateX(0);
+  }
+}
+
+.Tile {
+  align-items: center;
+  border: 2px solid transparent;
+  display: flex;
+  font-size: 32px;
+  font-weight: 700;
+  height: 100%;
+  justify-content: center;
+  text-transform: uppercase;
+  transition: transform 0.05s;
+  width: 100%;
+
+  @media only screen and (max-height: 710px) {
+    font-size: 20px;
+  }
+
+  &.absent {
+    background: #3a3a3c;
+  }
+
+  &.bounce {
+    animation-duration: 1000ms;
+    animation-name: bounce;
+  }
+
+  &.correct {
+    background: #538d4e;
+  }
+
+  &.empty {
+    border: 2px solid #3a3a3c;
+  }
+
+  &.flipIn {
+    animation-name: flip-in;
+    animation-duration: 250ms;
+    animation-timing-function: ease-in;
+  }
+
+  &.flipOut {
+    animation-name: flip-out;
+    animation-duration: 250ms;
+    animation-timing-function: ease-in;
+  }
+
+  &.pending {
+    border: 2px solid #565758;
+  }
+
+  &.present {
+    background: #b59f3b;
+  }
+
+  &.zoom {
+    transform: scale(1.15);
+  }
+}

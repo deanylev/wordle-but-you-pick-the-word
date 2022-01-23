@@ -1,0 +1,23 @@
+.App {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0 auto;
+  max-width: 500px;
+  width: 100%;
+
+  > .title {
+    border-bottom: 1px solid #3a3a3c;
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: 0.2rem;
+    padding: 3px 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  > .subtitle {
+    padding-top: 5px;
+  }
+}

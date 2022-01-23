@@ -1,0 +1,33 @@
+{
+  "name": "wordle-but-you-pick-the-word",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Wordle, but you pick the word!",
+  "license": "UNLICENSED",
+  "scripts": {
+    "lint": "eslint start.ts",
+    "start": "ts-node --transpile-only start.ts",
+    "start-dev": "ts-node-dev --respawn start.ts"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "mysql2": "^2.2.5",
+    "type-proxy": "^1.0.2",
+    "uuid": "^8.3.2"
+  },
+  "engines": {
+    "node": "14.x.x"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.11",
+    "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^4.18.0",
+    "@typescript-eslint/parser": "^4.18.0",
+    "eslint": "^7.22.0",
+    "ts-node": "^9.1.1",
+    "ts-node-dev": "^1.1.6",
+    "typescript": "^4.2.3"
+  }
+}
