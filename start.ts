@@ -46,17 +46,8 @@ const parsedDbPort = parseInt(dbPort ?? '3306', 10);
 
   app.use(express.static('frontend/build'));
 
-  async function generateShort() {
-    const length = Math.ceil(SHORT_LENGTH / 2);
-    const buffer = await promisify(randomBytes)(length);
-    const string = buffer.toString('hex');
-    const lengthDiff = string.length - SHORT_LENGTH;
-
-    if (lengthDiff > 0) {
-      return string.slice(0, -lengthDiff);
-    }
-
-    return string;
+  function generateShort() {
+    return Math.random().toString(36).slice(2, SHORT_LENGTH + 2);
   }
 
   const createBodyP = objectP({
@@ -88,7 +79,7 @@ const parsedDbPort = parseInt(dbPort ?? '3306', 10);
         let short;
 
         do {
-          short = await generateShort();
+          short = generateShort();
         } while (((await connection.execute('SELECT COUNT(1) FROM words WHERE short = ?', [short]))[0] as RowDataPacket[])[0]['COUNT(1)']);
 
         await connection.execute('INSERT INTO words (id, short, word) VALUES (?, ?, ?)', [v4(), short, word]);
