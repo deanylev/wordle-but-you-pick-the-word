@@ -5,6 +5,7 @@ import { Navigate } from 'react-router-dom';
 import Keyboard, { Letter } from '../../components/Keyboard';
 import TileRow from '../../components/TileRow';
 import { OnToast } from '../../components/Toaster';
+import wordList from '../../globals/wordList';
 import fetchApi from '../../utils/fetchApi';
 
 import './style.scss';
@@ -14,6 +15,7 @@ interface Props {
 }
 
 interface State {
+  realWords: boolean;
   shake: boolean;
   short: string | null;
   word: Letter[];
@@ -26,6 +28,7 @@ export default class CreatePage extends Component<Props, State> {
     super(props);
 
     this.state = {
+      realWords: false,
       shake: false,
       short: null,
       word: []
@@ -48,9 +51,7 @@ export default class CreatePage extends Component<Props, State> {
   }
 
   async handleEnter() {
-    const { word } = this.state;
-    if (word.length !== WORD_LENGTH) {
-      this.props.onToast('Not enough letters');
+    const shake = () => {
       this.setState({
         shake: true
       });
@@ -59,11 +60,25 @@ export default class CreatePage extends Component<Props, State> {
           shake: false
         });
       }, 650);
+    };
+
+    const { realWords, word } = this.state;
+    if (word.length !== WORD_LENGTH) {
+      this.props.onToast('Not enough letters');
+      shake();
+      return;
+    }
+
+    const joinedWord = word.join('');
+    if (realWords && !wordList.includes(joinedWord)) {
+      this.props.onToast('Not in word list');
+      shake();
       return;
     }
 
     const response = await fetchApi('POST', 'words', {
-      word: word.join('')
+      realWords,
+      word: joinedWord
     });
     const { short } = await response.json();
     this.setState({
@@ -83,7 +98,7 @@ export default class CreatePage extends Component<Props, State> {
   }
 
   render() {
-    const { shake, short, word } = this.state;
+    const { realWords, shake, short, word } = this.state;
     if (short) {
       return <Navigate to={`/${short}`} />
     }
@@ -95,6 +110,10 @@ export default class CreatePage extends Component<Props, State> {
           <div className="tiles">
             <TileRow shake={shake} word={word} />
           </div>
+          <label>
+            Restrict to Real Words?
+            <input checked={realWords} onChange={() => this.setState({ realWords: !realWords })} type="checkbox" />
+          </label>
         </div>
         <Keyboard
           onBackspace={this.handleBackspace}

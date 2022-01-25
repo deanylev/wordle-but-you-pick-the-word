@@ -1,13 +1,11 @@
 // node libraries
-import { randomBytes } from 'crypto';
 import { AddressInfo } from 'net';
-import { promisify } from 'util';
 
 // third party libraries
 import cors from 'cors';
 import express from 'express';
 import { createConnection, RowDataPacket } from 'mysql2/promise';
-import { objectP, stringP } from 'type-proxy';
+import { booleanP, objectP, stringP } from 'type-proxy';
 import { v4 } from 'uuid';
 
 // constants
@@ -32,7 +30,9 @@ const parsedDbPort = parseInt(dbPort ?? '3306', 10);
         id VARCHAR(36) NOT NULL PRIMARY KEY,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         short VARCHAR(10) NOT NULL,
-        word VARCHAR(10) NOT NULL UNIQUE
+        word VARCHAR(10) NOT NULL,
+        real_words TINYINT(1) NOT NULL,
+        UNIQUE KEY UQ_words_word_real_words (word, real_words)
       );
     `.trim()
   );
@@ -54,6 +54,7 @@ const parsedDbPort = parseInt(dbPort ?? '3306', 10);
   }
 
   const createBodyP = objectP({
+    realWords: booleanP,
     word: stringP
   });
 
@@ -65,13 +66,15 @@ const parsedDbPort = parseInt(dbPort ?? '3306', 10);
         return;
       }
 
-      const word = bodyResult.value.word.toLowerCase();
+      const { realWords: rawRealWords, word: rawWord } = bodyResult.value;
+      const realWords = rawRealWords ? 1 : 0;
+      const word = rawWord.toLowerCase();
       if (word.length !== WORD_LENGTH) {
         res.sendStatus(400);
         return;
       }
 
-      const existingResult = await connection.execute('SELECT short FROM words WHERE word = ?', [word]);
+      const existingResult = await connection.execute('SELECT short FROM words WHERE word = ? AND real_words = ?', [word, realWords]);
       const existingRecord = (existingResult[0] as RowDataPacket[])[0];
 
       if (existingRecord) {
@@ -85,7 +88,7 @@ const parsedDbPort = parseInt(dbPort ?? '3306', 10);
           short = generateShort();
         } while (((await connection.execute('SELECT COUNT(1) FROM words WHERE short = ?', [short]))[0] as RowDataPacket[])[0]['COUNT(1)']);
 
-        await connection.execute('INSERT INTO words (id, short, word) VALUES (?, ?, ?)', [v4(), short, word]);
+        await connection.execute('INSERT INTO words (id, short, word, real_words) VALUES (?, ?, ?, ?)', [v4(), short, word, realWords]);
         res.json({
           short
         });
@@ -100,7 +103,7 @@ const parsedDbPort = parseInt(dbPort ?? '3306', 10);
 
   app.get('/api/words/:short', async (req, res) => {
     const { short } = req.params;
-    const result = await connection.execute('SELECT word FROM words WHERE short = ?', [short]);
+    const result = await connection.execute('SELECT real_words, word FROM words WHERE short = ?', [short]);
     const record = (result[0] as RowDataPacket[])[0];
     if (!record) {
       res.sendStatus(404);
@@ -108,6 +111,7 @@ const parsedDbPort = parseInt(dbPort ?? '3306', 10);
     }
 
     res.json({
+      realWords: !!record.real_words,
       word: record.word
     });
   });

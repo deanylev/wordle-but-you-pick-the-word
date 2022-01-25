@@ -1,6 +1,6 @@
 const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : window.location.origin;
 
-export default function fetchApi(method: 'GET' | 'POST' | 'PUT' | 'DELETE', endpoint: string, data: Record<string, string> = {}) {
+export default function fetchApi(method: 'GET' | 'POST' | 'PUT' | 'DELETE', endpoint: string, data: Record<string, unknown> = {}) {
   const url = new URL(`${baseUrl}/api/${endpoint}`);
   const options: Record<string, unknown> = {
     headers: {
@@ -10,7 +10,7 @@ export default function fetchApi(method: 'GET' | 'POST' | 'PUT' | 'DELETE', endp
   };
 
   if (method === 'GET') {
-    url.search = new URLSearchParams(data).toString();
+    url.search = new URLSearchParams(data as Record<string, string>).toString();
   } else {
     options.body = JSON.stringify(data);
   }

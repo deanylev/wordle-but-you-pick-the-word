@@ -6,6 +6,7 @@ import { Navigate } from 'react-router-dom';
 import Keyboard, { Letter } from '../../components/Keyboard';
 import { OnClearToasts, OnToast } from '../../components/Toaster';
 import TileRow from '../../components/TileRow';
+import wordList from '../../globals/wordList';
 import fetchApi from '../../utils/fetchApi';
 import getLetterStatuses from '../../utils/getLetterStatuses';
 import getRandomElement from '../../utils/getRandomElement';
@@ -28,6 +29,7 @@ interface State {
   loading: boolean;
   modalOpen: boolean;
   presentLetters: Letter[];
+  realWords: boolean;
   shake: boolean;
   status: 'lost' | 'playing' | 'revealing' | 'won';
   word: string;
@@ -56,6 +58,7 @@ export default class PlayPage extends Component<Props, State> {
       loading: true,
       modalOpen: false,
       presentLetters: [],
+      realWords: false,
       shake: false,
       status: 'playing',
       word: '',
@@ -87,9 +90,10 @@ export default class PlayPage extends Component<Props, State> {
       return;
     }
 
-    const { word } = await response.json();
+    const { realWords, word } = await response.json();
     this.setState({
       loading: false,
+      realWords,
       word
     });
 
@@ -127,10 +131,7 @@ export default class PlayPage extends Component<Props, State> {
       return;
     }
 
-    const { absentLetters, activeWordIndex, correctLetters, presentLetters, word, words } = this.state;
-    const guess = words[activeWordIndex];
-    if (guess.length !== WORD_LENGTH) {
-      this.props.onToast('Not enough letters');
+    const shake = () => {
       this.setState({
         shake: true
       });
@@ -139,6 +140,19 @@ export default class PlayPage extends Component<Props, State> {
           shake: false
         });
       }, 650);
+    };
+
+    const { absentLetters, activeWordIndex, correctLetters, presentLetters, realWords, word, words } = this.state;
+    const guess = words[activeWordIndex];
+    if (guess.length !== WORD_LENGTH) {
+      this.props.onToast('Not enough letters');
+      shake();
+      return;
+    }
+
+    if (realWords && !wordList.includes(guess.join(''))) {
+      this.props.onToast('Not in word list');
+      shake();
       return;
     }
 
