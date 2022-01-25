@@ -294,7 +294,8 @@ export default class PlayPage extends Component<Props, State> {
       }).join('');
     }).join('\n');
     const text = `Wordle (but you pick the word) ${this.short} ${row}/${NUM_WORDS}\n\n${emojis}`;
-    if (navigator.share) {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile && navigator.share) {
       navigator.share({
         text
       });
