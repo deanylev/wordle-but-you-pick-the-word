@@ -1,4 +1,4 @@
-const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : window.location.origin;
+const baseUrl = process.env.NODE_ENV === 'development' ? `${window.location.protocol}//${window.location.hostname}:8080` : window.location.origin;
 
 export default function fetchApi(method: 'GET' | 'POST' | 'PUT' | 'DELETE', endpoint: string, data: Record<string, unknown> = {}) {
   const url = new URL(`${baseUrl}/api/${endpoint}`);

@@ -373,7 +373,7 @@ export default class PlayPage extends Component<Props, State> {
           }}
         >
           <div className="PlayPage-modal">
-            <div>A website by <a href="https://deanlevinson.com.au" rel="noopener" target="_blank">Dean Levinson</a></div>
+            <div>A website by <a href="https://deanlevinson.com.au" rel="noreferrer" target="_blank">Dean Levinson</a></div>
             <button onClick={() => this.setState({ goHome: true })}>
               CHOOSE YOUR OWN
             </button>

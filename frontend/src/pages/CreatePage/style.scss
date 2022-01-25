@@ -12,8 +12,22 @@
     text-align: center;
     width: 330px;
 
+    @media only screen and (max-height: 650px) {
+      padding-top: 50px;
+      width: 264px;
+
+      > .tiles {
+        height: 46.8px;
+      }
+    }
+
+    @media only screen and (min-height: 651px) {
+      > .tiles {
+        height: 58.5px;
+      }
+    }
+
     > .tiles {
-      height: 58.5px;
       padding: 20px 0;
     }
 

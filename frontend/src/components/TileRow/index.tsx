@@ -1,7 +1,7 @@
 import { Component } from 'react';
 
 import { Letter } from '../Keyboard';
-import Tile, { Status } from '../Tile';
+import Tile from '../Tile';
 
 import getLetterStatuses from '../../utils/getLetterStatuses';
 
@@ -44,32 +44,6 @@ export default class TileRow extends Component<Props> {
 
   render() {
     const { actualWord, shake, won, word } = this.props;
-    const lettersSortedByStatus = word
-      .map((letter, index) => ({
-        letter,
-        originalIndex: index,
-        status: this.getStatus(letter, index) as Status
-      }))
-      .sort(({ status: a }, { status: b }) => {
-        if (a === b) {
-          return 0;
-        }
-
-        if (a === 'correct') {
-          return -1;
-        }
-
-        if (b === 'correct') {
-          return 1;
-        }
-
-        if (a === 'present') {
-          return 1;
-        }
-
-        return -1;
-      });
-
     const normalisedLettersSortedByStatus = getLetterStatuses(actualWord ?? '', word, this.getStatus.bind(this));
 
     return (
