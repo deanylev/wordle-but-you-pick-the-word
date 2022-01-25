@@ -37,6 +37,9 @@ const parsedDbPort = parseInt(dbPort ?? '3306', 10);
     `.trim()
   );
 
+  // db keepalive
+  setInterval(() => connection.execute('SELECT 1'), 5000);
+
   const app = express();
   app.use(express.json());
 
