@@ -4,7 +4,7 @@ import isEqual from '../../utils/isEqual';
 
 import './style.scss';
 
-export type Letter = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z';
+export type Letter = ' ' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z';
 
 interface Props {
   absentLetters?: Letter[];
@@ -13,6 +13,7 @@ interface Props {
   onEnter: () => void;
   onLetter: (letter: Letter) => void;
   presentLetters?: Letter[];
+  showSpace?: boolean;
 }
 
 interface State {
@@ -83,7 +84,7 @@ export default class Keyboard extends Component<Props, State> {
       return;
     }
 
-    if (/^[A-Za-z]$/.test(key)) {
+    if (/^[A-Za-z ]$/.test(key)) {
       this.props.onLetter(key.toLowerCase() as Letter);
     } else if (key === 'Backspace') {
       this.props.onBackspace();
@@ -97,7 +98,7 @@ export default class Keyboard extends Component<Props, State> {
   }
 
   render() {
-    const { onBackspace, onEnter } = this.props;
+    const { onBackspace, onEnter, onLetter, showSpace } = this.props;
 
     return (
       <div className="Keyboard">
@@ -127,6 +128,13 @@ export default class Keyboard extends Component<Props, State> {
             </svg>
           </button>
         </div>
+        {showSpace && (
+          <div>
+            <div></div>
+            <button className="doubleWide" onClick={() => onLetter(' ')}></button>
+            <div></div>
+          </div>
+        )}
       </div>
     );
   }

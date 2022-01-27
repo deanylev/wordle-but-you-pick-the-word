@@ -31,7 +31,7 @@ export default class Tile extends Component<Props, State> {
   componentDidUpdate(prevProps: Props) {
     const iphone = navigator.platform === 'iPhone';
 
-    if (!prevProps.letter && this.props.letter) {
+    if (!prevProps.letter && this.props.letter || prevProps.letter === ' ' && this.props.letter && this.props.letter !== ' ') {
       if (!iphone) {
         this.setState({
           animation: 'zoom'

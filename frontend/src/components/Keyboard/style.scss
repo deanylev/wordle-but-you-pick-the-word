@@ -39,6 +39,10 @@
         flex: 1.5;
         font-size: 12px;
       }
+
+      &.doubleWide {
+        flex: 2;
+      }
     }
 
     > div {

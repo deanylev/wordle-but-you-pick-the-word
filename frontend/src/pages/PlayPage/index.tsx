@@ -150,6 +150,12 @@ export default class PlayPage extends Component<Props, State> {
       return;
     }
 
+    if (guess.some((value) => value === ' ')) {
+      this.props.onToast('Must fill in blanks');
+      shake();
+      return;
+    }
+
     if (realWords && !wordList.includes(guess.join(''))) {
       this.props.onToast('Not in word list');
       shake();
@@ -226,6 +232,15 @@ export default class PlayPage extends Component<Props, State> {
     const { activeWordIndex, words } = this.state;
     const word = words[activeWordIndex];
     if (word.length === WORD_LENGTH) {
+      const blankIndex = word.indexOf(' ');
+      if (blankIndex !== -1) {
+        const clonedWords = [...words];
+        clonedWords[activeWordIndex][blankIndex] = letter;
+
+        this.setState({
+          words: clonedWords
+        });
+      }
       return;
     }
 
@@ -353,6 +368,7 @@ export default class PlayPage extends Component<Props, State> {
           onEnter={this.handleEnter}
           onLetter={this.handleLetter}
           presentLetters={presentLetters}
+          showSpace={true}
         />
         <Modal
           ariaHideApp={false}
