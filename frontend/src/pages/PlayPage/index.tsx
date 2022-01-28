@@ -1,4 +1,4 @@
-import { Component, createRef } from 'react';
+import { Component } from 'react';
 
 import Modal from 'react-modal';
 import { Navigate } from 'react-router-dom';
@@ -43,8 +43,6 @@ const WORD_LENGTH = 5;
 const WIN_WORDS = ['Genius', 'Magnificent' ,'Impressive', 'Splendid', 'Great', 'Phew'];
 
 export default class PlayPage extends Component<Props, State> {
-  tilesRef = createRef<HTMLDivElement>();
-
   constructor(props: Props) {
     super(props);
 
@@ -98,7 +96,6 @@ export default class PlayPage extends Component<Props, State> {
     });
 
     window.addEventListener('resize', this.handleResize);
-    this.handleResize();
     this.handleResize();
   }
 
@@ -259,12 +256,7 @@ export default class PlayPage extends Component<Props, State> {
   }
 
   handleResize() {
-    const tiles = this.tilesRef.current;
-    if (!tiles) {
-      return;
-    }
-
-    const boardWidth = Math.min(Math.floor(tiles.clientHeight * 0.8 * (5 / 6)), MAX_BOARD_WIDTH);
+    const boardWidth = Math.min(Math.floor(window.innerHeight * 0.5 * (5 / 6)) - 70, MAX_BOARD_WIDTH);
     const boardHeight = 6 * Math.floor(boardWidth / 5);
     this.setState({
       boardHeight,
@@ -339,7 +331,7 @@ export default class PlayPage extends Component<Props, State> {
 
     return (
       <div className="PlayPage">
-        <div className="tiles" ref={this.tilesRef}>
+        <div className="tiles">
           <div className="innerWrapper" style={{ height: boardHeight, width: boardWidth }}>
             {words.map((word, index) => {
               const active = activeWordIndex === index;

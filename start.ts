@@ -117,7 +117,11 @@ const parsedDbPort = parseInt(dbPort ?? '3306', 10);
   });
 
   app.get('*', (req, res) => {
-    res.sendFile(`${__dirname}/frontend/build/index.html`);
+    res.sendFile(`${__dirname}/frontend/build/index.html`, (error) => {
+      if (error) {
+        res.send('maintenance in progress, please check again in a minute');
+      }
+    });
   });
 
   const server = app.listen(parseInt(process.env.PORT ?? '8080', 10), () => {
