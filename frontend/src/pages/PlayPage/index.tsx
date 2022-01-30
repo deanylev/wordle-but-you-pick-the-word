@@ -7,6 +7,7 @@ import Keyboard, { Letter } from '../../components/Keyboard';
 import { OnClearToasts, OnToast } from '../../components/Toaster';
 import TileRow from '../../components/TileRow';
 import wordList from '../../globals/wordList';
+import dateIsToday  from '../../utils/dateIsToday';
 import fetchApi from '../../utils/fetchApi';
 import getLetterStatuses from '../../utils/getLetterStatuses';
 import getRandomElement from '../../utils/getRandomElement';
@@ -46,6 +47,17 @@ export default class PlayPage extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const savedGame = localStorage.getItem('game');
+    let parsedSavedGame: Record<string, unknown> = {};
+    let useSavedGame = false;
+
+    try {
+      parsedSavedGame = savedGame && JSON.parse(savedGame);
+      useSavedGame = (parsedSavedGame && parsedSavedGame.short === this.short && dateIsToday(new Date(parsedSavedGame.timestamp as Date))) ?? false;
+    } catch {
+      // swallow
+    }
+
     this.state = {
       absentLetters: [],
       activeWordIndex: 0,
@@ -60,7 +72,8 @@ export default class PlayPage extends Component<Props, State> {
       shake: false,
       status: 'playing',
       word: '',
-      words: new Array(NUM_WORDS).fill([])
+      words: new Array(NUM_WORDS).fill([]),
+      ...useSavedGame && parsedSavedGame
     };
 
     this.handleBackspace = this.handleBackspace.bind(this);
@@ -191,7 +204,7 @@ export default class PlayPage extends Component<Props, State> {
     if (didWin) {
       this.setState({
         status: 'won'
-      });
+      }, () => this.persist());
 
       setTimeout(() => {
         this.props.onToast(getRandomElement(WIN_WORDS), 2000);
@@ -199,12 +212,14 @@ export default class PlayPage extends Component<Props, State> {
     } else if (isDone) {
       this.setState({
         status: 'lost'
-      });
+      }, () => this.persist());
 
       setTimeout(() => {
         this.props.onToast(word.toUpperCase(), null);
       }, 500 * 5);
     } else {
+      this.persist();
+
       setTimeout(() => {
         this.setState({
           status: 'playing'
@@ -316,8 +331,37 @@ export default class PlayPage extends Component<Props, State> {
     }
   }
 
+  persist() {
+    const { absentLetters, activeWordIndex, correctLetters, presentLetters, status, words } = this.state;
+    localStorage.setItem('game', JSON.stringify({
+      absentLetters,
+      activeWordIndex,
+      correctLetters,
+      presentLetters,
+      short: this.short,
+      status: status === 'revealing' ? 'playing' : status,
+      timestamp: new Date().toJSON(),
+      words
+    }));
+  }
+
   render() {
-    const { absentLetters, activeWordIndex, boardHeight, boardWidth, correctLetters, goHome, loading, modalOpen, presentLetters, shake, status, word: actualWord, words } = this.state;
+    const {
+      absentLetters,
+      activeWordIndex,
+      boardHeight,
+      boardWidth,
+      correctLetters,
+      goHome,
+      loading,
+      modalOpen,
+      presentLetters,
+      realWords,
+      shake,
+      status,
+      word: actualWord,
+      words
+    } = this.state;
 
     if (goHome) {
       return <Navigate to="/" />
@@ -360,7 +404,9 @@ export default class PlayPage extends Component<Props, State> {
           onEnter={this.handleEnter}
           onLetter={this.handleLetter}
           presentLetters={presentLetters}
+          secrets={[['whatistheword', () => this.props.onToast(`Shh, the word is "${actualWord}"`)]]}
           showSpace={true}
+          spaceText={`Real Words: ${realWords ? 'On' : 'Off'}`}
         />
         <Modal
           ariaHideApp={false}

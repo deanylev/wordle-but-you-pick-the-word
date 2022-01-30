@@ -6,6 +6,8 @@ import './style.scss';
 
 export type Letter = ' ' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z';
 
+type Secret = [string, () => void];
+
 interface Props {
   absentLetters?: Letter[];
   correctLetters?: Letter[];
@@ -13,12 +15,15 @@ interface Props {
   onEnter: () => void;
   onLetter: (letter: Letter) => void;
   presentLetters?: Letter[];
+  secrets?: Secret[];
   showSpace?: boolean;
+  spaceText?: string;
 }
 
 interface State {
   absentLetters: Letter[];
   correctLetters: Letter[];
+  history: Letter[];
   presentLetters: Letter[];
 }
 
@@ -27,11 +32,13 @@ export default class Keyboard extends Component<Props, State> {
     super(props);
 
     this.state = {
-      absentLetters: [],
-      correctLetters: [],
-      presentLetters: []
+      absentLetters: this.props.absentLetters ?? [],
+      correctLetters: this.props.correctLetters ?? [],
+      history: [],
+      presentLetters: this.props.presentLetters ?? []
     };
 
+    this.handleEnter = this.handleEnter.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
@@ -85,20 +92,52 @@ export default class Keyboard extends Component<Props, State> {
     }
 
     if (/^[A-Za-z ]$/.test(key)) {
-      this.props.onLetter(key.toLowerCase() as Letter);
+      this.handleLetter(key.toLowerCase() as Letter);
     } else if (key === 'Backspace') {
       this.props.onBackspace();
     } else if (key === 'Enter') {
-      this.props.onEnter();
+      this.handleEnter();
     }
   }
 
+  handleEnter() {
+    const { onEnter, secrets } = this.props;
+    const { history } = this.state;
+
+    try {
+      if (secrets) {
+        const enteredSecret = [...secrets]
+          .sort((a, b) => b.length - a.length)
+          .find(([string]) => {
+            return history.slice(Math.max(0, history.length - string.length)).join('') === string;
+          });
+        if (enteredSecret) {
+          enteredSecret[1]();
+          return;
+        }
+      }
+      onEnter();
+    } finally {
+      this.setState({
+        history: []
+      });
+    }
+  }
+
+  handleLetter(letter: Letter) {
+    const history = [...this.state.history, letter];
+    this.setState({
+      history: history.slice(Math.max(0, history.length - 100))
+    });
+    this.props.onLetter(letter);
+  }
+
   renderKey(letter: Letter) {
-    return <button className={this.getLetterClass(letter)} key={letter} onClick={() => this.props.onLetter(letter)}>{letter}</button>;
+    return <button className={this.getLetterClass(letter)} key={letter} onClick={() => this.handleLetter(letter)}>{letter}</button>;
   }
 
   render() {
-    const { onBackspace, onEnter, onLetter, showSpace } = this.props;
+    const { onBackspace, onLetter, showSpace, spaceText } = this.props;
 
     return (
       <div className="Keyboard">
@@ -117,7 +156,7 @@ export default class Keyboard extends Component<Props, State> {
           <div></div>
         </div>
         <div>
-          <button className="wide" onClick={onEnter}>enter</button>
+          <button className="wide" onClick={this.handleEnter}>enter</button>
           {
             ['z', 'x', 'c', 'v', 'b', 'n', 'm']
               .map((letter) => this.renderKey(letter as Letter))
@@ -131,7 +170,7 @@ export default class Keyboard extends Component<Props, State> {
         {showSpace && (
           <div>
             <div></div>
-            <button className="doubleWide" onClick={() => onLetter(' ')}></button>
+            <button className="doubleWide" onClick={() => onLetter(' ')}>{spaceText}</button>
             <div></div>
           </div>
         )}
