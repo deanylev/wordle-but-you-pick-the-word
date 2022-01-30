@@ -16,6 +16,7 @@ import makeUnique from '../../utils/makeUnique';
 import './style.scss';
 
 interface Props {
+  hardMode: boolean;
   onClearToasts: OnClearToasts;
   onToast: OnToast;
 }
@@ -37,17 +38,28 @@ interface State {
   words: Letter[][];
 }
 
+const LS_KEY = 'game';
 const MAX_BOARD_HEIGHT = 396;
 const MAX_BOARD_WIDTH = 330;
 const NUM_WORDS = 6;
 const WORD_LENGTH = 5;
 const WIN_WORDS = ['Genius', 'Magnificent' ,'Impressive', 'Splendid', 'Great', 'Phew'];
 
+const ORDINAL_RULES = new Intl.PluralRules('en', {
+  type: 'ordinal'
+});
+const ORDINAL_SUFFIXES = {
+  one: 'st',
+  two: 'nd',
+  few: 'rd',
+  other: 'th'
+};
+
 export default class PlayPage extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const savedGame = localStorage.getItem('game');
+    const savedGame = localStorage.getItem(LS_KEY);
     let parsedSavedGame: Record<string, unknown> = {};
     let useSavedGame = false;
 
@@ -152,6 +164,7 @@ export default class PlayPage extends Component<Props, State> {
       }, 650);
     };
 
+    const { hardMode } = this.props;
     const { absentLetters, activeWordIndex, correctLetters, presentLetters, realWords, word, words } = this.state;
     const guess = words[activeWordIndex];
     if (guess.length !== WORD_LENGTH) {
@@ -160,7 +173,7 @@ export default class PlayPage extends Component<Props, State> {
       return;
     }
 
-    if (guess.some((value) => value === ' ')) {
+    if (guess.includes(' ')) {
       this.props.onToast('Must fill in blanks');
       shake();
       return;
@@ -170,6 +183,24 @@ export default class PlayPage extends Component<Props, State> {
       this.props.onToast('Not in word list');
       shake();
       return;
+    }
+
+    if (hardMode) {
+      const missingCorrectEntry = Object.entries(correctLetters).find(([index, letter]) => guess[parseInt(index, 0)] !== letter);
+      if (missingCorrectEntry) {
+        const position = parseInt(missingCorrectEntry[0], 10) + 1;
+        const ordinal = ORDINAL_SUFFIXES[ORDINAL_RULES.select(position) as keyof typeof ORDINAL_SUFFIXES];
+        this.props.onToast(`${position}${ordinal} letter must be a ${missingCorrectEntry[1]?.toUpperCase()}`);
+        shake();
+        return;
+      }
+
+      const missingPresentLetter = presentLetters.find((letter) => !guess.includes(letter));
+      if (missingPresentLetter) {
+        this.props.onToast(`Guess must contain ${missingPresentLetter.toUpperCase()}`);
+        shake();
+        return;
+      }
     }
 
     this.setState({
@@ -280,6 +311,7 @@ export default class PlayPage extends Component<Props, State> {
   }
 
   async handleShare() {
+    const { hardMode } = this.props;
     const { absentLetters, activeWordIndex, correctLetters, presentLetters, status, word: actualWord, words } = this.state;
     const row = status === 'won' ? activeWordIndex + 1 : 'X';
     const emojis = words.slice(0, activeWordIndex + 1).map((word) => {
@@ -315,7 +347,7 @@ export default class PlayPage extends Component<Props, State> {
         return '😳';
       }).join('');
     }).join('\n');
-    const text = `Wordle (but you pick the word) ${this.short} ${row}/${NUM_WORDS}\n\n${emojis}`;
+    const text = `Wordle (but you pick the word) ${this.short} ${row}/${NUM_WORDS}${hardMode ? '*' : ''}\n\n${emojis}`;
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (isMobile && navigator.share) {
       navigator.share({
@@ -333,7 +365,7 @@ export default class PlayPage extends Component<Props, State> {
 
   persist() {
     const { absentLetters, activeWordIndex, correctLetters, presentLetters, status, words } = this.state;
-    localStorage.setItem('game', JSON.stringify({
+    localStorage.setItem(LS_KEY, JSON.stringify({
       absentLetters,
       activeWordIndex,
       correctLetters,
