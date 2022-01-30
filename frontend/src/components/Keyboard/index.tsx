@@ -91,12 +91,14 @@ export default class Keyboard extends Component<Props, State> {
       return;
     }
 
-    if (/^[A-Za-z ]$/.test(key)) {
+    if (/^[A-Za-z]$/.test(key)) {
       this.handleLetter(key.toLowerCase() as Letter);
     } else if (key === 'Backspace') {
       this.props.onBackspace();
     } else if (key === 'Enter') {
       this.handleEnter();
+    } else if (key === ' ' && this.props.showSpace) {
+      this.handleLetter(' ');
     }
   }
 

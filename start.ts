@@ -10,7 +10,6 @@ import { v4 } from 'uuid';
 
 // constants
 const SHORT_LENGTH = 6;
-const WORD_LENGTH = 5;
 
 const [host, dbPort] = (process.env.DB_HOST ?? 'localhost').split(':');
 const parsedDbPort = parseInt(dbPort ?? '3306', 10);
@@ -69,7 +68,7 @@ const parsedDbPort = parseInt(dbPort ?? '3306', 10);
       const { realWords: rawRealWords, word: rawWord } = bodyResult.value;
       const realWords = rawRealWords ? 1 : 0;
       const word = rawWord.toLowerCase();
-      if (word.length !== WORD_LENGTH) {
+      if (!/^[a-z]{5}$/.test(word)) {
         res.sendStatus(400);
         return;
       }
