@@ -96,12 +96,12 @@ export default class PlayPage extends Component<Props, State> {
     this.handleShare = this.handleShare.bind(this);
   }
 
-  get short() {
-    return window.location.pathname.slice(1);
-  }
-
   get locked() {
     return this.state.status !== 'playing';
+  }
+
+  get short() {
+    return window.location.pathname.slice(1);
   }
 
   async componentDidMount() {

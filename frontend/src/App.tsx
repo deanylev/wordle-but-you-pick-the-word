@@ -42,12 +42,12 @@ export default class App extends Component<Props, State> {
           {(onToast, onClearToasts) => (
             <Settings onClose={() => this.setState({ showSettings: false })} onToast={onToast} show={this.state.showSettings}>
               {(hardMode) => (
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<CreatePage onToast={onToast} />} />
-                  <Route path="/:short" element={<PlayPage hardMode={hardMode} onClearToasts={onClearToasts} onToast={onToast} />} />
-                </Routes>
-              </BrowserRouter>
+                <BrowserRouter>
+                  <Routes>
+                    <Route path="/" element={<CreatePage onToast={onToast} />} />
+                    <Route path="/:short" element={<PlayPage hardMode={hardMode} onClearToasts={onClearToasts} onToast={onToast} />} />
+                  </Routes>
+                </BrowserRouter>
               )}
             </Settings>
           )}
