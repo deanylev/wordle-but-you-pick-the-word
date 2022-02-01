@@ -40,5 +40,22 @@
         margin-left: 10px;
       }
     }
+
+    > .or {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 25px 0;
+    }
+
+    > button {
+      background: #538d4e;
+      border: 0;
+      border-radius: 4px;
+      color: #d7dadc;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 0 auto;
+      padding: 15px;
+    }
   }
 }

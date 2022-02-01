@@ -7,6 +7,7 @@ import TileRow from '../../components/TileRow';
 import { OnToast } from '../../components/Toaster';
 import wordList from '../../globals/wordList';
 import fetchApi from '../../utils/fetchApi';
+import getRandomElement from '../../utils/getRandomElement';
 
 import './style.scss';
 
@@ -36,7 +37,19 @@ export default class CreatePage extends Component<Props, State> {
 
     this.handleBackspace = this.handleBackspace.bind(this);
     this.handleEnter = this.handleEnter.bind(this);
+    this.handleGetRandomWord = this.handleGetRandomWord.bind(this);
     this.handleLetter = this.handleLetter.bind(this);
+  }
+
+  async create(word: string, realWords: boolean) {
+    const response = await fetchApi('POST', 'words', {
+      realWords,
+      word
+    });
+    const { short } = await response.json();
+    this.setState({
+      short
+    });
   }
 
   handleBackspace() {
@@ -76,14 +89,11 @@ export default class CreatePage extends Component<Props, State> {
       return;
     }
 
-    const response = await fetchApi('POST', 'words', {
-      realWords,
-      word: joinedWord
-    });
-    const { short } = await response.json();
-    this.setState({
-      short
-    });
+    await this.create(joinedWord, realWords);
+  }
+
+  handleGetRandomWord() {
+    this.create(getRandomElement(wordList), true);
   }
 
   handleLetter(letter: Letter) {
@@ -114,6 +124,8 @@ export default class CreatePage extends Component<Props, State> {
             Restrict to Real Words?
             <input checked={realWords} onChange={() => this.setState({ realWords: !realWords })} type="checkbox" />
           </label>
+          <div className="or">OR</div>
+          <button onClick={this.handleGetRandomWord} onMouseDown={(event) => event.preventDefault()}>Get Random Word</button>
         </div>
         <Keyboard
           onBackspace={this.handleBackspace}
