@@ -8,8 +8,10 @@
   width: 100%;
 
   > .header {
+    align-items: center;
     border-bottom: 1px solid #3a3a3c;
     display: flex;
+    height: 51px;
     justify-content: space-between;
     padding: 3px 0;
     width: 100%;
@@ -23,6 +25,11 @@
       font-weight: 700;
       letter-spacing: 0.2rem;
       text-align: center;
+
+      @media only screen and (max-width: 360px) {
+        font-size: 22px;
+        letter-spacing: 0.1rem;
+      }
     }
 
     > button {
@@ -32,9 +39,5 @@
       padding: 0;
       width: 36px;
     }
-  }
-
-  > .subtitle {
-    padding-top: 5px;
   }
 }

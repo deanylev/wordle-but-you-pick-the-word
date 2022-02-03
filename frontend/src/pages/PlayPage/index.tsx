@@ -302,7 +302,7 @@ export default class PlayPage extends Component<Props, State> {
   }
 
   handleResize() {
-    const boardWidth = Math.min(Math.floor(window.innerHeight * 0.5 * (5 / 6)) - 70, MAX_BOARD_WIDTH);
+    const boardWidth = Math.min(Math.floor(window.innerHeight * 0.55 * (5 / 6)) - 70, MAX_BOARD_WIDTH);
     const boardHeight = 6 * Math.floor(boardWidth / 5);
     this.setState({
       boardHeight,

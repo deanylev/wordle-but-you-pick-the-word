@@ -36,7 +36,6 @@ export default class App extends Component<Props, State> {
             </svg>
           </button>
         </div>
-        <div className="subtitle">(but you pick the word)</div>
         <Toaster>
           {(onToast, onClearToasts) => (
             <Settings onClose={() => this.setState({ showSettings: false })} onToast={onToast} show={this.state.showSettings}>
