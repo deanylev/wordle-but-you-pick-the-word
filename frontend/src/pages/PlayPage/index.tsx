@@ -16,6 +16,8 @@ import makeUnique from '../../utils/makeUnique';
 import './style.scss';
 
 interface Props {
+  colourBlindMode: boolean;
+  darkMode: boolean;
   hardMode: boolean;
   onClearToasts: OnClearToasts;
   onToast: OnToast;
@@ -311,7 +313,7 @@ export default class PlayPage extends Component<Props, State> {
   }
 
   async handleShare() {
-    const { hardMode } = this.props;
+    const { colourBlindMode, darkMode, hardMode } = this.props;
     const { absentLetters, activeWordIndex, correctLetters, presentLetters, status, word: actualWord, words } = this.state;
     const row = status === 'won' ? activeWordIndex + 1 : 'X';
     const emojis = words.slice(0, activeWordIndex + 1).map((word) => {
@@ -333,15 +335,15 @@ export default class PlayPage extends Component<Props, State> {
 
       return normalisedLettersSortedByStatus.map(({ status }) => {
         if (status === 'absent') {
-          return '⬛';
+          return darkMode ? '⬛' : '⬜️';
         }
 
         if (status === 'correct') {
-          return '🟩';
+          return colourBlindMode ? '🟧' : '🟩';
         }
 
         if (status === 'present') {
-          return '🟨';
+          return colourBlindMode ? '🟦' : '🟨';
         }
 
         return '😳';
@@ -446,7 +448,7 @@ export default class PlayPage extends Component<Props, State> {
           onRequestClose={this.handleModalClose}
           style={{
             content: {
-              background: '#121213',
+              background: 'var(--bg-colour)',
               border: '0',
               margin: 'auto',
               maxHeight: 440,
@@ -466,7 +468,7 @@ export default class PlayPage extends Component<Props, State> {
             <button onClick={this.handleShare}>
               SHARE
               <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
-                <path fill="#d7dadc" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92zM18 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM6 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 7.02c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"></path>
+                <path fill="var(--text-colour-light)" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92zM18 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM6 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 7.02c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"></path>
               </svg>
             </button>
           </div>

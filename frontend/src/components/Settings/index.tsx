@@ -6,7 +6,7 @@ import { OnToast } from '../Toaster';
 import './style.scss';
 
 interface Props {
-  children: (hardMode: boolean) => ReactNode;
+  children: (hardMode: boolean, darkMode: boolean, colourBlindMode: boolean) => ReactNode;
   onClose: () => void;
   onToast: OnToast;
   show: boolean;
@@ -14,11 +14,14 @@ interface Props {
 
 interface State {
   animation: 'slideIn' | 'slideOut' | null;
+  colourBlindMode: boolean;
+  darkMode: boolean;
   hardMode: boolean;
   show: boolean;
 }
 
 const LS_KEY = 'settings';
+const SETTINGS: (keyof State)[] = ['colourBlindMode', 'darkMode', 'hardMode'];
 
 export default class Settings extends Component<Props, State> {
   animationTimeout: number | null = null;
@@ -37,6 +40,8 @@ export default class Settings extends Component<Props, State> {
 
     this.state = {
       animation: null,
+      colourBlindMode: false,
+      darkMode: true,
       hardMode: false,
       show: this.props.show,
       ...parsedSavedSettings
@@ -78,21 +83,22 @@ export default class Settings extends Component<Props, State> {
       }, 200);
     }
 
-    if (prevState.hardMode !== this.state.hardMode) {
+    if (SETTINGS.some((setting) => prevState[setting] !== this.state[setting])) {
       this.persist();
     }
   }
 
   persist() {
-    const { hardMode } = this.state;
-    localStorage.setItem(LS_KEY, JSON.stringify({
-      hardMode
-    }));
+    const settings: Partial<Record<keyof State, unknown>> = {};
+    SETTINGS.forEach((setting) => {
+      settings[setting] = this.state[setting];
+    });
+    localStorage.setItem(LS_KEY, JSON.stringify(settings));
   }
 
   render() {
-    const { children, onClose, onToast } = this.props;
-    const { animation, hardMode, show } = this.state;
+    const { children, onClose } = this.props;
+    const { animation, colourBlindMode, darkMode, hardMode, show } = this.state;
 
     return (
       <>
@@ -120,7 +126,14 @@ export default class Settings extends Component<Props, State> {
                   <div>
                     <div className="title">Dark Theme</div>
                   </div>
-                  <Switch onChange={() => onToast('lol no')} value={true} />
+                  <Switch onChange={(newValue) => this.setState({ darkMode: newValue })} value={darkMode} />
+                </div>
+                <div>
+                  <div>
+                    <div className="title">Color Blind Mode</div>
+                    <div className="hint">High contrast colours</div>
+                  </div>
+                  <Switch onChange={(newValue) => this.setState({ colourBlindMode: newValue })} value={colourBlindMode} />
                 </div>
               </div>
             </div>
@@ -130,7 +143,7 @@ export default class Settings extends Component<Props, State> {
             </div>
           </div>
         )}
-        {children(hardMode)}
+        {children(hardMode, darkMode, colourBlindMode)}
       </>
     );
   }

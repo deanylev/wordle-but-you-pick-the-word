@@ -1,5 +1,4 @@
 .Switch {
-  // align-items: center;
   background: #565758;
   border: 0;
   border-radius: 999px;
@@ -10,7 +9,7 @@
   width: 32px;
 
   &.on {
-    background: #6aaa64;
+    background: var(--switch-on-colour);
 
     > div {
       left: 12px;

@@ -48,6 +48,7 @@
 .Tile {
   align-items: center;
   border: 2px solid transparent;
+  color: var(--text-colour);
   display: flex;
   font-size: 32px;
   font-weight: 700;
@@ -70,7 +71,8 @@
   }
 
   &.absent {
-    background: #3a3a3c;
+    background: var(--absent-colour);
+    color: var(--tile-text-colour-light);
   }
 
   &.bounce {
@@ -79,11 +81,12 @@
   }
 
   &.correct {
-    background: #538d4e;
+    background: var(--correct-colour);
+    color: var(--tile-text-colour-light);
   }
 
   &.empty {
-    border: 2px solid #3a3a3c;
+    border: 2px solid var(--secondary-colour);
   }
 
   &.flipIn {
@@ -99,11 +102,12 @@
   }
 
   &.pending {
-    border: 2px solid #565758;
+    border: 2px solid var(--accent-colour);
   }
 
   &.present {
-    background: #b59f3b;
+    background: var(--present-colour);
+    color: var(--tile-text-colour-light);
   }
 
   &.zoom {

@@ -6,10 +6,10 @@
     margin: 0 0px 8px;
 
     > button {
-      background: #818384;
+      background: var(--keyboard-colour);
       border: 0;
       border-radius: 4px;
-      color: #d7dadc;
+      color: var(--text-colour);
       cursor: pointer;
       flex: 1;
       font-size: 13.3px;
@@ -24,15 +24,18 @@
       }
 
       &.absent {
-        background: #3a3a3c;
+        background: var(--absent-colour);
+        color: var(--text-colour-light);
       }
 
       &.correct {
-        background: #538d4e;
+        background: var(--correct-colour);
+        color: var(--text-colour-light);
       }
 
       &.present {
-        background: #b59f3b;
+        background: var(--present-colour);
+        color: var(--text-colour-light);
       }
 
       &.wide {

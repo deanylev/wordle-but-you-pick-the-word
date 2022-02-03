@@ -13,9 +13,9 @@
     width: 100%;
 
     > div {
-      background-color: #d7dadc;
+      background-color: var(--text-colour);
       border-radius: 5px;
-      color: #000;
+      color: var(--text-colour-inverse);
       font-weight: bold;
       margin: 10px 0;
       min-width: 150px;

@@ -48,10 +48,10 @@
     }
 
     > button {
-      background: #538d4e;
+      background: var(--correct-colour);
       border: 0;
       border-radius: 4px;
-      color: #d7dadc;
+      color: var(--text-colour-light);
       cursor: pointer;
       font-weight: bold;
       margin: 0 auto;

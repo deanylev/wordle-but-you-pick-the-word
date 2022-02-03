@@ -38,10 +38,10 @@
 
   > button {
     align-items: center;
-    background: #538d4e;
+    background: var(--correct-colour);
     border: 0;
     border-radius: 4px;
-    color: #d7dadc;
+    color: var(--text-colour-light);
     cursor: pointer;
     display: flex;
     font-size: 20px;
@@ -57,6 +57,6 @@
   }
 
   > div > a {
-    color: #d7dadc;
+    color: inherit;
   }
 }
