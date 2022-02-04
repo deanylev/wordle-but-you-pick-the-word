@@ -19,13 +19,17 @@ html {
 }
 
 body {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
   background: var(--bg-colour);
   color: var(--text-colour);
   font-family: 'Helvetica Neue', Arial, sans-serif;
   height: 100%;
   margin: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+
+  &.hideOverflow {
+    overflow: hidden;
+  }
 
   &.lightMode {
     --absent-colour: #787c7e;

@@ -6,7 +6,7 @@ import { OnToast } from '../Toaster';
 import './style.scss';
 
 interface Props {
-  children: (hardMode: boolean, darkMode: boolean, colourBlindMode: boolean) => ReactNode;
+  children: (animating: boolean, hardMode: boolean, darkMode: boolean, colourBlindMode: boolean) => ReactNode;
   onClose: () => void;
   onToast: OnToast;
   show: boolean;
@@ -143,7 +143,7 @@ export default class Settings extends Component<Props, State> {
             </div>
           </div>
         )}
-        {children(hardMode, darkMode, colourBlindMode)}
+        {children(!!animation, hardMode, darkMode, colourBlindMode)}
       </>
     );
   }
