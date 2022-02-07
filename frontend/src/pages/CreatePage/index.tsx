@@ -5,7 +5,8 @@ import { Navigate } from 'react-router-dom';
 import Keyboard, { Letter } from '../../components/Keyboard';
 import TileRow from '../../components/TileRow';
 import { OnToast } from '../../components/Toaster';
-import wordList from '../../globals/wordList';
+import allWords from '../../globals/allWords';
+import viableWords from '../../globals/viableWords';
 import fetchApi from '../../utils/fetchApi';
 import getRandomElement from '../../utils/getRandomElement';
 
@@ -83,7 +84,7 @@ export default class CreatePage extends Component<Props, State> {
     }
 
     const joinedWord = word.join('');
-    if (realWords && !wordList.includes(joinedWord)) {
+    if (realWords && !allWords.includes(joinedWord)) {
       this.props.onToast('Not in word list');
       shake();
       return;
@@ -93,7 +94,7 @@ export default class CreatePage extends Component<Props, State> {
   }
 
   handleGetRandomWord() {
-    this.create(getRandomElement(wordList), true);
+    this.create(getRandomElement(viableWords), true);
   }
 
   handleLetter(letter: Letter) {

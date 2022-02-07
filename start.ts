@@ -2,7 +2,7 @@
 import { AddressInfo } from 'net';
 
 // our libraries
-import wordList from './frontend/src/globals/wordList';
+import allWords from './frontend/src/globals/allWords';
 
 // third party libraries
 import cors from 'cors';
@@ -68,7 +68,7 @@ const parsedDbPort = parseInt(dbPort ?? '3306', 10);
       const { realWords: rawRealWords, word: rawWord } = bodyResult.value;
       const realWords = rawRealWords ? 1 : 0;
       const word = rawWord.toLowerCase();
-      if (!/^[a-z]{5}$/.test(word) || rawRealWords && !wordList.includes(word)) {
+      if (!/^[a-z]{5}$/.test(word) || rawRealWords && !allWords.includes(word)) {
         res.sendStatus(400);
         return;
       }

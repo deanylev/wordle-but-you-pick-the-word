@@ -6,7 +6,7 @@ import { Navigate } from 'react-router-dom';
 import Keyboard, { Letter } from '../../components/Keyboard';
 import { OnClearToasts, OnToast } from '../../components/Toaster';
 import TileRow from '../../components/TileRow';
-import wordList from '../../globals/wordList';
+import allWords from '../../globals/allWords';
 import dateIsToday  from '../../utils/dateIsToday';
 import fetchApi from '../../utils/fetchApi';
 import getLetterStatuses from '../../utils/getLetterStatuses';
@@ -181,7 +181,7 @@ export default class PlayPage extends Component<Props, State> {
       return;
     }
 
-    if (realWords && !wordList.includes(guess.join(''))) {
+    if (realWords && !allWords.includes(guess.join(''))) {
       this.props.onToast('Not in word list');
       shake();
       return;
