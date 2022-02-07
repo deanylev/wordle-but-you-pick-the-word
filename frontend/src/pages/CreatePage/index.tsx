@@ -39,6 +39,7 @@ export default class CreatePage extends Component<Props, State> {
     this.handleBackspace = this.handleBackspace.bind(this);
     this.handleEnter = this.handleEnter.bind(this);
     this.handleGetRandomWord = this.handleGetRandomWord.bind(this);
+    this.handleGetTodaysWord = this.handleGetTodaysWord.bind(this);
     this.handleLetter = this.handleLetter.bind(this);
   }
 
@@ -93,6 +94,23 @@ export default class CreatePage extends Component<Props, State> {
     await this.create(joinedWord, realWords);
   }
 
+  handleGetTodaysWord() {
+    const originalDate = 1623934800000;
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    const diff = now.getTime() - originalDate;
+    const diffToDays = Math.floor(diff / 86400000);
+
+    const word = viableWords[diffToDays - 1];
+    if (!word) {
+      this.props.onToast('No more words left!');
+      return;
+    }
+
+    this.create(word, true);
+  }
+
   handleGetRandomWord() {
     this.create(getRandomElement(viableWords), true);
   }
@@ -127,6 +145,7 @@ export default class CreatePage extends Component<Props, State> {
           </label>
           <div className="or">OR</div>
           <button onClick={this.handleGetRandomWord} onMouseDown={(event) => event.preventDefault()}>Get Random Word</button>
+          <button onClick={this.handleGetTodaysWord} onMouseDown={(event) => event.preventDefault()}>Get Today's Word</button>
         </div>
         <Keyboard
           onBackspace={this.handleBackspace}

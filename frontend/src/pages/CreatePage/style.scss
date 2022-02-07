@@ -54,8 +54,14 @@
       color: var(--text-colour-light);
       cursor: pointer;
       font-weight: bold;
-      margin: 0 auto;
+      margin: 0 5px;
       padding: 15px;
+
+
+      @media only screen and (max-height: 650px) {
+        margin: 5px 0;
+        padding: 10px;
+      }
     }
   }
 }
