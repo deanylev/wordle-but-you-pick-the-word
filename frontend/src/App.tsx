@@ -40,9 +40,9 @@ export default class App extends Component<Props, State> {
         <Toaster>
           {(onToast, onClearToasts) => (
             <Settings onClose={() => this.setState({ showSettings: false })} onToast={onToast} show={this.state.showSettings}>
-              {(animating, hardMode, darkMode, colourBlindMode) => (
+              {(animating, hardMode, darkMode, colourBlindMode, deanMode) => (
                 <>
-                  <BodyClassName className={`${animating ? 'hideOverflow' : ''} ${darkMode ? '' : 'lightMode'} ${colourBlindMode ? 'colourBlindMode' : ''}`} id="darkMode" />
+                  <BodyClassName className={`${animating ? 'hideOverflow' : ''} ${darkMode ? '' : 'lightMode'} ${colourBlindMode ? 'colourBlindMode' : ''} ${deanMode ? 'deanMode' : ''}`} id="darkMode" />
                   <BrowserRouter>
                     <Routes>
                       <Route

@@ -48,6 +48,10 @@ body {
     --switch-on-colour: var(--correct-colour);
     --tile-text-colour-light: #fff;
   }
+
+  &.deanMode {
+    background: url('assets/dean.jpg');
+  }
 }
 
 button {

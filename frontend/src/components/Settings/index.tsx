@@ -6,7 +6,7 @@ import { OnToast } from '../Toaster';
 import './style.scss';
 
 interface Props {
-  children: (animating: boolean, hardMode: boolean, darkMode: boolean, colourBlindMode: boolean) => ReactNode;
+  children: (animating: boolean, hardMode: boolean, darkMode: boolean, colourBlindMode: boolean, deanMode: boolean) => ReactNode;
   onClose: () => void;
   onToast: OnToast;
   show: boolean;
@@ -16,12 +16,13 @@ interface State {
   animation: 'slideIn' | 'slideOut' | null;
   colourBlindMode: boolean;
   darkMode: boolean;
+  deanMode: boolean;
   hardMode: boolean;
   show: boolean;
 }
 
 const LS_KEY = 'settings';
-const SETTINGS: (keyof State)[] = ['colourBlindMode', 'darkMode', 'hardMode'];
+const SETTINGS: (keyof State)[] = ['colourBlindMode', 'darkMode', 'deanMode', 'hardMode'];
 
 export default class Settings extends Component<Props, State> {
   animationTimeout: number | null = null;
@@ -42,6 +43,7 @@ export default class Settings extends Component<Props, State> {
       animation: null,
       colourBlindMode: false,
       darkMode: true,
+      deanMode: false,
       hardMode: false,
       show: this.props.show,
       ...parsedSavedSettings
@@ -98,7 +100,7 @@ export default class Settings extends Component<Props, State> {
 
   render() {
     const { children, onClose } = this.props;
-    const { animation, colourBlindMode, darkMode, hardMode, show } = this.state;
+    const { animation, colourBlindMode, darkMode, deanMode, hardMode, show } = this.state;
 
     return (
       <>
@@ -135,6 +137,13 @@ export default class Settings extends Component<Props, State> {
                   </div>
                   <Switch onChange={(newValue) => this.setState({ colourBlindMode: newValue })} value={colourBlindMode} />
                 </div>
+                <div>
+                  <div>
+                    <div className="title">Dean Mode</div>
+                    <div className="hint">🗿</div>
+                  </div>
+                  <Switch onChange={(newValue) => this.setState({ deanMode: newValue })} value={deanMode} />
+                </div>
               </div>
             </div>
             <div className="footer">
@@ -143,7 +152,7 @@ export default class Settings extends Component<Props, State> {
             </div>
           </div>
         )}
-        {children(!!animation, hardMode, darkMode, colourBlindMode)}
+        {children(!!animation, hardMode, darkMode, colourBlindMode, deanMode)}
       </>
     );
   }
