@@ -58,17 +58,22 @@ const ORDINAL_SUFFIXES = {
   other: 'th'
 };
 
+type PersistedGame = Pick<State, 'absentLetters' | 'activeWordIndex' | 'correctLetters' | 'presentLetters' | 'status' | 'words'> & {
+  short: string;
+  timestamp: string;
+};
+
 export default class PlayPage extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
     const savedGame = localStorage.getItem(LS_KEY);
-    let parsedSavedGame: Record<string, unknown> = {};
+    let parsedSavedGame: Partial<PersistedGame> = {};
     let useSavedGame = false;
 
     try {
       parsedSavedGame = savedGame && JSON.parse(savedGame);
-      useSavedGame = (parsedSavedGame && parsedSavedGame.short === this.short && dateIsToday(new Date(parsedSavedGame.timestamp as Date))) ?? false;
+      useSavedGame = (parsedSavedGame && parsedSavedGame.short === this.short && dateIsToday(new Date(parsedSavedGame.timestamp as string))) ?? false;
     } catch {
       // swallow
     }
@@ -373,7 +378,7 @@ export default class PlayPage extends Component<Props, State> {
 
   persist() {
     const { absentLetters, activeWordIndex, correctLetters, presentLetters, status, words } = this.state;
-    localStorage.setItem(LS_KEY, JSON.stringify({
+    const game: PersistedGame = {
       absentLetters,
       activeWordIndex,
       correctLetters,
@@ -382,7 +387,8 @@ export default class PlayPage extends Component<Props, State> {
       status: status === 'revealing' ? 'playing' : status,
       timestamp: new Date().toJSON(),
       words
-    }));
+    };
+    localStorage.setItem(LS_KEY, JSON.stringify(game));
   }
 
   render() {

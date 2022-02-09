@@ -23,6 +23,7 @@ interface State {
   word: Letter[];
 }
 
+const LS_KEY = 'usedRandomWords';
 const WORD_LENGTH = 5;
 
 export default class CreatePage extends Component<Props, State> {
@@ -112,7 +113,22 @@ export default class CreatePage extends Component<Props, State> {
   }
 
   handleGetRandomWord() {
-    this.create(getRandomElement(viableWords), true);
+    let usedWords = [];
+    try {
+      usedWords = JSON.parse(localStorage.getItem(LS_KEY) ?? '[]');
+    } catch {
+      // swallow
+    }
+
+    if (usedWords.length === viableWords.length) {
+      usedWords = [];
+    }
+
+    const word = getRandomElement(viableWords, usedWords);
+    usedWords.push(word);
+    localStorage.setItem(LS_KEY, JSON.stringify(usedWords));
+
+    this.create(word, true);
   }
 
   handleLetter(letter: Letter) {
