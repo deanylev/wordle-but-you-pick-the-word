@@ -20,6 +20,7 @@ interface Props {
   darkMode: boolean;
   hardMode: boolean;
   onClearToasts: OnClearToasts;
+  onConesMode: () => void;
   onToast: OnToast;
 }
 
@@ -169,6 +170,7 @@ export default class PlayPage extends Component<Props, State> {
     const { hardMode } = this.props;
     const { absentLetters, activeWordIndex, correctLetters, presentLetters, realWords, word, words } = this.state;
     const guess = words[activeWordIndex];
+    const guessString = guess.join('');
     if (guess.length !== WORD_LENGTH) {
       this.props.onToast('Not enough letters');
       shake();
@@ -181,7 +183,7 @@ export default class PlayPage extends Component<Props, State> {
       return;
     }
 
-    if (realWords && !allWords.includes(guess.join(''))) {
+    if (realWords && !allWords.includes(guessString)) {
       this.props.onToast('Not in word list');
       shake();
       return;
@@ -203,6 +205,10 @@ export default class PlayPage extends Component<Props, State> {
         shake();
         return;
       }
+    }
+
+    if (guessString === 'cones' && activeWordIndex === 0) {
+      this.props.onConesMode();
     }
 
     this.setState({

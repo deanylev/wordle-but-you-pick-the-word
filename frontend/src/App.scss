@@ -32,6 +32,26 @@
       }
     }
 
+    > .boof {
+      display: flex;
+      justify-content: center;
+      left: 0;
+      margin: auto;
+      position: absolute;
+      right: 0;
+      top: 25px;
+
+      > img {
+        margin-left: 80px;
+        width: 50px;
+
+        @media only screen and (max-width: 360px) {
+          margin-left: 45px;
+          width: 30px;
+        }
+      }
+    }
+
     > button {
       background: transparent;
       border: 0;

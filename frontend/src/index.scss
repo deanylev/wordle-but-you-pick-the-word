@@ -52,6 +52,10 @@ body {
   &.deanMode {
     background: url('assets/dean.jpg');
   }
+
+  &.conesMode {
+    --bg-colour: #31a35d;
+  }
 }
 
 button {
