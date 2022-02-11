@@ -28,13 +28,9 @@
 
 .Settings {
   background: var(--bg-colour);
-  display: flex;
-  flex-direction: column;
   height: calc(100% - 5px);
-  justify-content: space-between;
   left: 0;
   margin: auto;
-  max-width: 500px;
   padding-top: 5px;
   position: absolute;
   right: 0;
@@ -50,65 +46,76 @@
     animation: slide-out 200ms;
   }
 
-  > div {
-    > .header {
-      align-items: center;
-      display: flex;
-      font-weight: bold;
-      justify-content: space-between;
+  > .innerWrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+    margin: 0 auto;
+    max-width: 500px;
+    width: 100%;
 
-      > .spacer {
-        width: 36px;
-      }
-
-      > button {
-        background: transparent;
-        border: 0;
-        cursor: pointer;
-        padding: 0;
-        width: 36px;
-      }
-    }
-
-    > .options {
-      display: flex;
-      flex-direction: column;
-      padding-top: 20px;
-
-      > div {
+    > div {
+      > .header {
         align-items: center;
-        border-bottom: 1px solid var(--secondary-colour);
         display: flex;
+        font-weight: bold;
         justify-content: space-between;
-        padding: 15px 20px 15px;
+        padding: 0 16px;
+
+        > .spacer {
+          width: 36px;
+        }
+
+        > button {
+          background: transparent;
+          border: 0;
+          cursor: pointer;
+          padding: 0;
+          width: 36px;
+        }
+      }
+
+      > .options {
+        display: flex;
+        flex-direction: column;
+        padding-top: 20px;
 
         > div {
-          text-align: left;
+          align-items: center;
+          border-bottom: 1px solid var(--secondary-colour);
+          display: flex;
+          justify-content: space-between;
+          padding: 15px 20px 15px;
 
-          > .title {
-            font-size: 18px;
-          }
+          > div {
+            text-align: left;
 
-          > .hint {
-            color: #818384;
-            font-size: 12px;
+            > .title {
+              font-size: 18px;
+            }
+
+            > .hint {
+              color: #818384;
+              font-size: 12px;
+            }
           }
         }
       }
-    }
 
-    &.footer {
-      color: #818384;
-      display: flex;
-      flex-direction: column;
-      font-size: 12px;
-      gap: 2px;
-      padding: 0 15px 15px;
-      text-align: left;
+      &.footer {
+        color: #818384;
+        display: flex;
+        flex-direction: column;
+        font-size: 12px;
+        gap: 2px;
+        padding: 0 15px 15px;
+        text-align: left;
 
-      > a,
-      > span > a {
-        color: inherit;
+        > a,
+        > span > a {
+          color: inherit;
+        }
       }
     }
   }

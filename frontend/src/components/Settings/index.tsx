@@ -21,6 +21,7 @@ interface State {
   show: boolean;
 }
 
+const ANIMATION_TIMEOUT_MS = 150;
 const LS_KEY = 'settings';
 const SETTINGS: (keyof State)[] = ['colourBlindMode', 'darkMode', 'deanMode', 'hardMode'];
 
@@ -66,7 +67,7 @@ export default class Settings extends Component<Props, State> {
         this.setState({
           animation: null
         });
-      }, 200);
+      }, ANIMATION_TIMEOUT_MS);
     } else if (prevProps.show && !this.props.show) {
       if (this.animationTimeout !== null) {
         clearTimeout(this.animationTimeout);
@@ -82,7 +83,7 @@ export default class Settings extends Component<Props, State> {
           animation: null,
           show: false
         });
-      }, 200);
+      }, ANIMATION_TIMEOUT_MS);
     }
 
     if (SETTINGS.some((setting) => prevState[setting] !== this.state[setting])) {
@@ -106,49 +107,51 @@ export default class Settings extends Component<Props, State> {
       <>
         {show && (
           <div className={`Settings ${animation ?? ''}`}>
-            <div>
-              <div className="header">
-                <div className="spacer"></div>
-                <div>SETTINGS</div>
-                <button onClick={onClose}>
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
-                    <path fill="#565758" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
-                  </svg>
-                </button>
+            <div className="innerWrapper">
+              <div>
+                <div className="header">
+                  <div className="spacer"></div>
+                  <div>SETTINGS</div>
+                  <button onClick={onClose}>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                      <path fill="var(--text-colour)" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+                    </svg>
+                  </button>
+                </div>
+                <div className="options">
+                  <div>
+                    <div>
+                      <div className="title">Hard Mode</div>
+                      <div className="hint">Any revealed hints must be used in subsequent guesses</div>
+                    </div>
+                    <Switch onChange={(newValue) => this.setState({ hardMode: newValue })} value={hardMode} />
+                  </div>
+                  <div>
+                    <div>
+                      <div className="title">Dark Theme</div>
+                    </div>
+                    <Switch onChange={(newValue) => this.setState({ darkMode: newValue })} value={darkMode} />
+                  </div>
+                  <div>
+                    <div>
+                      <div className="title">Color Blind Mode</div>
+                      <div className="hint">High contrast colours</div>
+                    </div>
+                    <Switch onChange={(newValue) => this.setState({ colourBlindMode: newValue })} value={colourBlindMode} />
+                  </div>
+                  <div>
+                    <div>
+                      <div className="title">Dean Mode</div>
+                      <div className="hint">🗿</div>
+                    </div>
+                    <Switch onChange={(newValue) => this.setState({ deanMode: newValue })} value={deanMode} />
+                  </div>
+                </div>
               </div>
-              <div className="options">
-                <div>
-                  <div>
-                    <div className="title">Hard Mode</div>
-                    <div className="hint">Any revealed hints must be used in subsequent guesses</div>
-                  </div>
-                  <Switch onChange={(newValue) => this.setState({ hardMode: newValue })} value={hardMode} />
-                </div>
-                <div>
-                  <div>
-                    <div className="title">Dark Theme</div>
-                  </div>
-                  <Switch onChange={(newValue) => this.setState({ darkMode: newValue })} value={darkMode} />
-                </div>
-                <div>
-                  <div>
-                    <div className="title">Color Blind Mode</div>
-                    <div className="hint">High contrast colours</div>
-                  </div>
-                  <Switch onChange={(newValue) => this.setState({ colourBlindMode: newValue })} value={colourBlindMode} />
-                </div>
-                <div>
-                  <div>
-                    <div className="title">Dean Mode</div>
-                    <div className="hint">🗿</div>
-                  </div>
-                  <Switch onChange={(newValue) => this.setState({ deanMode: newValue })} value={deanMode} />
-                </div>
+              <div className="footer">
+                <a href="https://github.com/deanylev/wordle-but-you-pick-the-word" rel="noreferrer" target="_blank">Source</a>
+                <span>Made by <a href="https://deanlevinson.com.au" rel="noreferrer" target="_blank">Dean Levinson</a></span>
               </div>
-            </div>
-            <div className="footer">
-              <a href="https://github.com/deanylev/wordle-but-you-pick-the-word" rel="noreferrer" target="_blank">Source</a>
-              <span>Made by <a href="https://deanlevinson.com.au" rel="noreferrer" target="_blank">Dean Levinson</a></span>
             </div>
           </div>
         )}

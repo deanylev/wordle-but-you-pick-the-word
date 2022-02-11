@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'Karnak Condensed Normal';
+  font-style: normal;
+  font-weight: normal;
+  src: url('assets/fonts/karnakcondensed-normal-700.woff2') format('woff2');
+}
+
 :root {
   --absent-colour: var(--secondary-colour);
   --accent-colour: #565758;
@@ -6,11 +13,13 @@
   --keyboard-colour: #818384;
   --present-colour: #b59f3b;
   --secondary-colour: #3a3a3c;
+  --sidenav-website-hover-colour: #2f2f31;
+  --switch-off-colour: #565758;
   --switch-on-colour: #6aaa64;
   --text-colour: var(--text-colour-light);
-  --text-colour-dark: #1a1a1b;
+  --text-colour-dark: #000;
   --text-colour-inverse: var(--text-colour-dark);
-  --text-colour-light: #d7dadc;
+  --text-colour-light: #fff;
   --tile-text-colour-light: var(--text-colour-light);
 }
 
@@ -34,9 +43,12 @@ body {
     --bg-colour: #fff;
     --keyboard-colour: var(--secondary-colour);
     --secondary-colour: #d3d6da;
+    --sidenav-website-hover-colour: #f4f4f4;
+    --switch-off-colour: #878a8c;
     --text-colour: var(--text-colour-dark);
     --text-colour-inverse: var(--text-colour-light);
     --text-colour-light: #fff;
+    --text-colour: var(--text-colour-dark);
   }
 
   &.colourBlindMode {
@@ -47,7 +59,7 @@ body {
   }
 
   &.deanMode {
-    background: url('assets/dean.jpg');
+    background: url('assets/images/dean.jpg');
   }
 
   &.conesMode {
