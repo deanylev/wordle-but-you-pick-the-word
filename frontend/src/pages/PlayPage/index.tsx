@@ -45,7 +45,6 @@ const LS_KEY = 'game';
 const MAX_BOARD_HEIGHT = 396;
 const MAX_BOARD_WIDTH = 330;
 const NUM_WORDS = 6;
-const WORD_LENGTH = 5;
 const WIN_WORDS = ['Genius', 'Magnificent' ,'Impressive', 'Splendid', 'Great', 'Phew'];
 
 const ORDINAL_RULES = new Intl.PluralRules('en', {
@@ -176,7 +175,7 @@ export default class PlayPage extends Component<Props, State> {
     const { absentLetters, activeWordIndex, correctLetters, presentLetters, realWords, word, words } = this.state;
     const guess = words[activeWordIndex];
     const guessString = guess.join('');
-    if (guess.length !== WORD_LENGTH) {
+    if (guess.length !== word.length) {
       this.props.onToast('Not enough letters');
       shake();
       return;
@@ -222,7 +221,7 @@ export default class PlayPage extends Component<Props, State> {
     const absent = new Set<Letter>();
     const correct: Record<number, Letter> = {};
     const present = new Set<Letter>();
-    for (let i = 0; i < WORD_LENGTH; i++) {
+    for (let i = 0; i < word.length; i++) {
       if (!word.includes(guess[i])) {
         absent.add(guess[i]);
         continue;
@@ -237,7 +236,7 @@ export default class PlayPage extends Component<Props, State> {
     }
     const newCorrectLetters = { ...correct, ...correctLetters };
     const isDone = activeWordIndex === words.length - 1;
-    const didWin = Object.keys(newCorrectLetters).length === WORD_LENGTH;
+    const didWin = Object.keys(newCorrectLetters).length === word.length;
     const newActiveWordIndex = (isDone || didWin) ? activeWordIndex : activeWordIndex + 1;
     this.setState({
       absentLetters: makeUnique([...absent, ...absentLetters]),
@@ -252,7 +251,7 @@ export default class PlayPage extends Component<Props, State> {
 
       setTimeout(() => {
         this.props.onToast(getRandomElement(WIN_WORDS), 2000);
-      }, 500 * 5);
+      }, 500 * word.length);
     } else if (isDone) {
       this.setState({
         status: 'lost'
@@ -260,7 +259,7 @@ export default class PlayPage extends Component<Props, State> {
 
       setTimeout(() => {
         this.props.onToast(word.toUpperCase(), null);
-      }, 500 * 5);
+      }, 500 * word.length);
     } else {
       this.persist();
 
@@ -268,7 +267,7 @@ export default class PlayPage extends Component<Props, State> {
         this.setState({
           status: 'playing'
         });
-      }, 500 * 5);
+      }, 500 * word.length);
     }
 
     if (didWin || isDone) {
@@ -276,7 +275,7 @@ export default class PlayPage extends Component<Props, State> {
         this.setState({
           modalOpen: true
         });
-      }, 500 * 5 + 2000);
+      }, 500 * word.length + 2000);
     }
   }
 
@@ -285,10 +284,10 @@ export default class PlayPage extends Component<Props, State> {
       return;
     }
 
-    const { activeWordIndex, words } = this.state;
-    const word = words[activeWordIndex];
-    if (word.length === WORD_LENGTH) {
-      const blankIndex = word.indexOf(' ');
+    const { activeWordIndex, word, words } = this.state;
+    const guess = words[activeWordIndex];
+    if (guess.length === word.length) {
+      const blankIndex = guess.indexOf(' ');
       if (blankIndex !== -1) {
         const clonedWords = [...words];
         clonedWords[activeWordIndex][blankIndex] = letter;
@@ -301,7 +300,7 @@ export default class PlayPage extends Component<Props, State> {
     }
 
     const clonedWords = [...words];
-    clonedWords[activeWordIndex] = [...word, letter];
+    clonedWords[activeWordIndex] = [...guess, letter];
 
     this.setState({
       words: clonedWords
@@ -434,6 +433,7 @@ export default class PlayPage extends Component<Props, State> {
                   correctLetters={correctLetters}
                   done={(won || status === 'lost') && active}
                   key={index}
+                  numLetters={actualWord.length}
                   presentLetters={presentLetters}
                   shake={shake && active}
                   won={won && active}
@@ -446,6 +446,7 @@ export default class PlayPage extends Component<Props, State> {
         <Keyboard
           absentLetters={absentLetters}
           correctLetters={makeUnique(Object.values(correctLetters) as Letter[])}
+          numLetters={actualWord.length}
           onBackspace={this.handleBackspace}
           onEnter={this.handleEnter}
           onLetter={this.handleLetter}

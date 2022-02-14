@@ -17,6 +17,7 @@ interface Props {
 }
 
 interface State {
+  numLetters: number;
   realWords: boolean;
   shake: boolean;
   short: string | null;
@@ -24,13 +25,13 @@ interface State {
 }
 
 const LS_KEY = 'usedRandomWords';
-const WORD_LENGTH = 5;
 
 export default class CreatePage extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
     this.state = {
+      numLetters: 5,
       realWords: false,
       shake: false,
       short: null,
@@ -78,8 +79,8 @@ export default class CreatePage extends Component<Props, State> {
       }, 650);
     };
 
-    const { realWords, word } = this.state;
-    if (word.length !== WORD_LENGTH) {
+    const { numLetters, realWords, word } = this.state;
+    if (word.length !== numLetters) {
       this.props.onToast('Not enough letters');
       shake();
       return;
@@ -132,8 +133,8 @@ export default class CreatePage extends Component<Props, State> {
   }
 
   handleLetter(letter: Letter) {
-    const { word } = this.state;
-    if (word.length === WORD_LENGTH) {
+    const { numLetters, word } = this.state;
+    if (word.length === numLetters) {
       return;
     }
 
@@ -143,7 +144,7 @@ export default class CreatePage extends Component<Props, State> {
   }
 
   render() {
-    const { realWords, shake, short, word } = this.state;
+    const { numLetters, realWords, shake, short, word } = this.state;
     if (short) {
       return <Navigate to={`/${short}`} />
     }
@@ -153,7 +154,7 @@ export default class CreatePage extends Component<Props, State> {
         <div className="input">
           <div className="hint">Enter a Word With the Keyboard:</div>
           <div className="tiles">
-            <TileRow shake={shake} word={word} />
+            <TileRow numLetters={numLetters} shake={shake} word={word} />
           </div>
           <label>
             Restrict to Real Words?

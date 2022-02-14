@@ -10,6 +10,7 @@ interface Props {
   bounce?: boolean;
   index: number;
   letter: Letter | null;
+  numLetters: number;
   status?: Status;
 }
 
@@ -71,7 +72,7 @@ export default class Tile extends Component<Props, State> {
             animation: null
           });
         }, 1000);
-      }, 500 * 5 + this.props.index * 100);
+      }, 500 * this.props.numLetters + this.props.index * 100);
     }
   }
 

@@ -13,6 +13,7 @@ interface Props {
   actualWord?: string;
   correctLetters?: Partial<Record<number, Letter>>;
   done?: boolean;
+  numLetters: number;
   presentLetters?: Letter[];
   shake?: boolean;
   won?: boolean;
@@ -43,12 +44,12 @@ export default class TileRow extends Component<Props> {
   }
 
   render() {
-    const { actualWord, shake, won, word } = this.props;
+    const { actualWord, numLetters, shake, won, word } = this.props;
     const normalisedLettersSortedByStatus = getLetterStatuses(actualWord ?? '', word, this.getStatus.bind(this));
 
     return (
       <div className={`TileRow ${shake ? 'shake' : ''}`}>
-        {Array.from(new Array(5), (_, index) => {
+        {Array.from(new Array(numLetters), (_, index) => {
           const { letter = null, status } = normalisedLettersSortedByStatus[index] || {};
           return (
             <Tile
@@ -56,6 +57,7 @@ export default class TileRow extends Component<Props> {
               index={index}
               key={index}
               letter={letter}
+              numLetters={numLetters}
               status={status}
             />
           );

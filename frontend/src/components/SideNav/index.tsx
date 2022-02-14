@@ -101,19 +101,19 @@ export default class SideNav extends Component<Props, State> {
             </div>
             <div className="websites">
               <a href="https://whatepisodeshouldiwatch.com" rel="noreferrer" target="_blank">
-                <img src="/images/whatepisodeshouldiwatch.ico" />
+                <img alt="What Episode Should I Watch?" src="/images/whatepisodeshouldiwatch.ico" />
                 What Episode Should I Watch?
               </a>
               <a href="https://geniusquotefinder.com" rel="noreferrer" target="_blank">
-                <img src="/images/geniusquotefinder.ico" />
+                <img alt="Genius Quote Finder" src="/images/geniusquotefinder.ico" />
                 Genius Quote Finder
               </a>
               <a href="https://awesomemediadownloader.xyz" rel="noreferrer" target="_blank">
-                <img src="/images/awesomemediadownloader.ico" />
+                <img alt="Awesome Media Downloader" src="/images/awesomemediadownloader.ico" />
                 Awesome Media Downloader
               </a>
               <a href="https://improveyourmood.xyz" rel="noreferrer" target="_blank">
-                <img src="/images/improveyourmood.ico" />
+                <img alt="Improve Your Mood" src="/images/improveyourmood.ico" />
                 Improve Your Mood
               </a>
               <a href="https://deanlevinson.com.au/#/portfolio" rel="noreferrer" target="_blank">

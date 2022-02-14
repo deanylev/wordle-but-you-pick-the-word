@@ -11,6 +11,7 @@ type Secret = [string, () => void];
 interface Props {
   absentLetters?: Letter[];
   correctLetters?: Letter[];
+  numLetters?: number;
   onBackspace: () => void;
   onEnter: () => void;
   onLetter: (letter: Letter) => void;
@@ -49,8 +50,8 @@ export default class Keyboard extends Component<Props, State> {
   }
 
   componentDidUpdate() {
-    const { absentLetters, correctLetters, presentLetters } = this.props;
-    if (!(absentLetters && correctLetters && presentLetters)) {
+    const { absentLetters, correctLetters, numLetters, presentLetters } = this.props;
+    if (!(absentLetters && correctLetters && numLetters && presentLetters)) {
       return;
     }
 
@@ -64,7 +65,7 @@ export default class Keyboard extends Component<Props, State> {
         correctLetters,
         presentLetters
       });
-    }, 350 * 5);
+    }, 350 * numLetters);
   }
 
   componentWillUnmount() {
