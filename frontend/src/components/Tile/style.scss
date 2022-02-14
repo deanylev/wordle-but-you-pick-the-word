@@ -47,13 +47,16 @@
 
 .Tile {
   align-items: center;
+  background: transparent;
   border: 2px solid transparent;
+  box-sizing: content-box;
   color: var(--text-colour);
   display: flex;
   font-size: 32px;
   font-weight: 700;
   height: 100%;
   justify-content: center;
+  padding: 0;
   text-transform: uppercase;
   transition: transform 0.05s;
   width: 100%;
@@ -78,6 +81,10 @@
   &.bounce {
     animation-duration: 1000ms;
     animation-name: bounce;
+  }
+
+  &.clickable {
+    cursor: pointer;
   }
 
   &.correct {
@@ -108,6 +115,10 @@
   &.present {
     background: var(--present-colour);
     color: var(--tile-text-colour-light);
+  }
+
+  &.selected {
+    border: 2px solid var(--correct-colour);
   }
 
   &.zoom {

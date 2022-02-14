@@ -1,5 +1,6 @@
 import { Component } from 'react';
 
+import cloneDeep from 'lodash.clonedeep';
 import Modal from 'react-modal';
 import { Navigate } from 'react-router-dom';
 
@@ -35,6 +36,7 @@ interface State {
   modalOpen: boolean;
   presentLetters: Letter[];
   realWords: boolean;
+  selectedLetterIndex: number | null;
   shake: boolean;
   status: 'lost' | 'playing' | 'revealing' | 'won';
   word: string;
@@ -88,6 +90,7 @@ export default class PlayPage extends Component<Props, State> {
       modalOpen: false,
       presentLetters: [],
       realWords: false,
+      selectedLetterIndex: null,
       shake: false,
       status: 'playing',
       word: '',
@@ -141,9 +144,20 @@ export default class PlayPage extends Component<Props, State> {
       return;
     }
 
-    const { activeWordIndex, words } = this.state;
+    const { activeWordIndex, selectedLetterIndex, words } = this.state;
     const word = words[activeWordIndex];
     if (word.length === 0) {
+      return;
+    }
+
+    if (selectedLetterIndex !== null) {
+      const clonedWords = cloneDeep(words);
+      clonedWords[activeWordIndex].splice(selectedLetterIndex, 1);
+
+      this.setState({
+        selectedLetterIndex: null,
+        words: clonedWords
+      });
       return;
     }
 
@@ -242,7 +256,8 @@ export default class PlayPage extends Component<Props, State> {
       absentLetters: makeUnique([...absent, ...absentLetters]),
       activeWordIndex: newActiveWordIndex,
       correctLetters: newCorrectLetters,
-      presentLetters: makeUnique([...present, ...presentLetters])
+      presentLetters: makeUnique([...present, ...presentLetters]),
+      selectedLetterIndex: null
     });
     if (didWin) {
       this.setState({
@@ -284,8 +299,20 @@ export default class PlayPage extends Component<Props, State> {
       return;
     }
 
-    const { activeWordIndex, word, words } = this.state;
+    const { activeWordIndex, selectedLetterIndex, word, words } = this.state;
     const guess = words[activeWordIndex];
+    if (selectedLetterIndex !== null) {
+      const clonedWords = [...words];
+      clonedWords[activeWordIndex][selectedLetterIndex] = letter;
+
+
+      this.setState({
+        selectedLetterIndex: null,
+        words: clonedWords
+      });
+      return;
+    }
+
     if (guess.length === word.length) {
       const blankIndex = guess.indexOf(' ');
       if (blankIndex !== -1) {
@@ -402,6 +429,7 @@ export default class PlayPage extends Component<Props, State> {
       modalOpen,
       presentLetters,
       realWords,
+      selectedLetterIndex,
       shake,
       status,
       word: actualWord,
@@ -434,7 +462,15 @@ export default class PlayPage extends Component<Props, State> {
                   done={(won || status === 'lost') && active}
                   key={index}
                   numLetters={actualWord.length}
+                  onTileClick={(selectedLetterIndex) => {
+                    if (typeof words[activeWordIndex][selectedLetterIndex] !== 'undefined') {
+                      this.setState({
+                        selectedLetterIndex: selectedLetterIndex === this.state.selectedLetterIndex ? null : selectedLetterIndex
+                      });
+                    }
+                  }}
                   presentLetters={presentLetters}
+                  selectedLetterIndex={active && selectedLetterIndex !== null ? selectedLetterIndex : undefined}
                   shake={shake && active}
                   won={won && active}
                   word={word}

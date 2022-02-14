@@ -14,7 +14,9 @@ interface Props {
   correctLetters?: Partial<Record<number, Letter>>;
   done?: boolean;
   numLetters: number;
+  onTileClick?: (index: number) => void;
   presentLetters?: Letter[];
+  selectedLetterIndex?: number;
   shake?: boolean;
   won?: boolean;
   word: Letter[];
@@ -44,7 +46,7 @@ export default class TileRow extends Component<Props> {
   }
 
   render() {
-    const { actualWord, numLetters, shake, won, word } = this.props;
+    const { actualWord, active, numLetters, onTileClick, selectedLetterIndex, shake, won, word } = this.props;
     const normalisedLettersSortedByStatus = getLetterStatuses(actualWord ?? '', word, this.getStatus.bind(this));
 
     return (
@@ -54,10 +56,17 @@ export default class TileRow extends Component<Props> {
           return (
             <Tile
               bounce={won}
+              clickable={!!active}
               index={index}
               key={index}
               letter={letter}
               numLetters={numLetters}
+              onClick={() => {
+                if (active) {
+                  onTileClick?.(index);
+                }
+              }}
+              selected={selectedLetterIndex === index}
               status={status}
             />
           );

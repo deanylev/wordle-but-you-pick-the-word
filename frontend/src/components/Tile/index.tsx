@@ -8,9 +8,12 @@ export type Status = 'absent' | 'correct' | 'present';
 
 interface Props {
   bounce?: boolean;
+  clickable: boolean;
   index: number;
   letter: Letter | null;
   numLetters: number;
+  onClick: () => void;
+  selected: boolean;
   status?: Status;
 }
 
@@ -77,12 +80,16 @@ export default class Tile extends Component<Props, State> {
   }
 
   render() {
-    const { letter } = this.props;
+    const { clickable, letter, onClick, selected } = this.props;
     const { animation, status } = this.state;
     return (
-      <div className={`Tile ${status ?? (letter ? 'pending' : 'empty')} ${animation ?? ''}`}>
+      <button
+        className={`Tile ${status ?? (letter ? 'pending' : 'empty')} ${animation ?? ''} ${selected ? 'selected' : ''} ${clickable && letter ? 'clickable' : ''}`}
+        onClick={onClick}
+        onMouseDown={(event) => event.preventDefault()}
+      >
         {letter ?? ''}
-      </div>
+      </button>
     );
   }
 }
