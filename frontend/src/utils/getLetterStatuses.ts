@@ -39,7 +39,7 @@ export default function getLetterStatuses(actualWord: string, word: Letter[], st
 
   const normalisedLettersSortedByStatus: typeof lettersSortedByStatus = [];
   for (const { letter, originalIndex, status } of lettersSortedByStatus) {
-    if (letterCounts?.[letter] === 0) {
+    if (letterCounts[letter] === 0) {
       normalisedLettersSortedByStatus.push({
         letter,
         originalIndex,

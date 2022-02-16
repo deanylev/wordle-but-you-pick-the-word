@@ -100,6 +100,7 @@ export default class PlayPage extends Component<Props, State> {
 
     this.handleBackspace = this.handleBackspace.bind(this);
     this.handleEnter = this.handleEnter.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleLetter = this.handleLetter.bind(this);
     this.handleModalClose = this.handleModalClose.bind(this);
     this.handleResize = this.handleResize.bind(this);
@@ -132,10 +133,13 @@ export default class PlayPage extends Component<Props, State> {
 
     window.addEventListener('resize', this.handleResize);
     this.handleResize();
+
+    document.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
+    document.removeEventListener('keydown', this.handleKeyDown);
     this.props.onClearToasts();
   }
 
@@ -294,6 +298,25 @@ export default class PlayPage extends Component<Props, State> {
     }
   }
 
+  handleKeyDown({ key }: KeyboardEvent) {
+    const { activeWordIndex, selectedLetterIndex, words } = this.state;
+    const word = words[activeWordIndex];
+
+    if (word.length === 0) {
+      return;
+    }
+
+    if (key === 'ArrowLeft') {
+      this.setState({
+        selectedLetterIndex: (selectedLetterIndex === null || selectedLetterIndex === 0) ? word.length - 1 : selectedLetterIndex - 1
+      });
+    } else if (key === 'ArrowRight') {
+      this.setState({
+        selectedLetterIndex: (selectedLetterIndex === null || selectedLetterIndex === word.length - 1) ? 0 : selectedLetterIndex + 1
+      });
+    }
+  }
+
   handleLetter(letter: Letter) {
     if (this.locked) {
       return;
@@ -388,17 +411,17 @@ export default class PlayPage extends Component<Props, State> {
     }).join('\n');
     const text = `Wordle (but you pick the word) ${this.short} ${row}/${NUM_WORDS}${hardMode ? '*' : ''}\n\n${emojis}`;
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (isMobile && navigator.share) {
-      navigator.share({
-        text
-      });
-    } else {
-      try {
+    try {
+      if (isMobile && navigator.share) {
+        await navigator.share({
+          text
+        });
+      } else {
         await navigator.clipboard.writeText(text);
         this.props.onToast('Copied results to clipboard', 2000);
-      } catch {
-        this.props.onToast('I\'m afraid I can\'t do that, Dave', 2000);
-      }
+        }
+    } catch {
+      this.props.onToast('I\'m afraid I can\'t do that, Dave', 2000);
     }
   }
 
