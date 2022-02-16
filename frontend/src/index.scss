@@ -59,7 +59,7 @@ body {
   }
 
   &.deanMode {
-    background: url('assets/images/dean.jpg');
+    --bg-colour: url('assets/images/dean.jpg');
   }
 
   &.conesMode {
