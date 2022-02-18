@@ -45,7 +45,6 @@ interface State {
 
 const LS_KEY = 'game';
 const MAX_BOARD_HEIGHT = 396;
-const MAX_BOARD_WIDTH = 330;
 const NUM_WORDS = 6;
 const WIN_WORDS = ['Genius', 'Magnificent' ,'Impressive', 'Splendid', 'Great', 'Phew'];
 
@@ -83,7 +82,7 @@ export default class PlayPage extends Component<Props, State> {
       absentLetters: [],
       activeWordIndex: 0,
       boardHeight: MAX_BOARD_HEIGHT,
-      boardWidth: MAX_BOARD_WIDTH,
+      boardWidth: 330,
       correctLetters: {},
       goHome: false,
       loading: true,
@@ -364,8 +363,9 @@ export default class PlayPage extends Component<Props, State> {
   }
 
   handleResize() {
-    const boardWidth = Math.min(Math.floor(window.innerHeight * 0.55 * (5 / 6)) - 70, MAX_BOARD_WIDTH);
-    const boardHeight = 6 * Math.floor(boardWidth / 5);
+    const { word: { length } } = this.state;
+    const boardWidth = Math.min(Math.floor(Math.min(window.innerHeight * 0.55, window.innerWidth * 0.8) * (length / 6)) - 70, 66 * length);
+    const boardHeight = 6 * Math.floor(boardWidth / length);
     this.setState({
       boardHeight,
       boardWidth
@@ -479,7 +479,7 @@ export default class PlayPage extends Component<Props, State> {
               return (
                 <TileRow
                   absentLetters={absentLetters}
-                  active={active}
+                  active={active && status === 'playing'}
                   actualWord={actualWord}
                   correctLetters={correctLetters}
                   done={(won || status === 'lost') && active}

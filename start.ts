@@ -68,7 +68,7 @@ const parsedDbPort = parseInt(dbPort ?? '3306', 10);
       const { realWords: rawRealWords, word: rawWord } = bodyResult.value;
       const realWords = rawRealWords ? 1 : 0;
       const word = rawWord.toLowerCase();
-      if (!/^[a-z]{5}$/.test(word) || rawRealWords && !allWords.includes(word)) {
+      if (!/^[a-z]{3,8}$/.test(word) || rawRealWords && (!allWords.includes(word) || word.length !== 5)) {
         res.sendStatus(400);
         return;
       }

@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, createRef } from 'react';
 
 import { Letter } from '../Keyboard';
 import Tile from '../Tile';
@@ -23,6 +23,14 @@ interface Props {
 }
 
 export default class TileRow extends Component<Props> {
+  firstTileRef = createRef<HTMLButtonElement>();
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.forceUpdate();
+    });
+  }
+
   getStatus(letter: Letter, index: number) {
     const { absentLetters, active, correctLetters, done, presentLetters } = this.props;
 
@@ -49,8 +57,11 @@ export default class TileRow extends Component<Props> {
     const { actualWord, active, numLetters, onTileClick, selectedLetterIndex, shake, won, word } = this.props;
     const normalisedLettersSortedByStatus = getLetterStatuses(actualWord ?? '', word, this.getStatus.bind(this));
 
+    const tileWidth = this.firstTileRef?.current?.offsetWidth;
+    const fontSize = (tileWidth && Math.min(Math.ceil(tileWidth / 2), 32)) ?? 32;
+
     return (
-      <div className={`TileRow ${shake ? 'shake' : ''}`}>
+      <div className={`TileRow ${shake ? 'shake' : ''}`} style={{ fontSize }}>
         {Array.from(new Array(numLetters), (_, index) => {
           const { letter = null, status } = normalisedLettersSortedByStatus[index] || {};
           return (
@@ -66,6 +77,7 @@ export default class TileRow extends Component<Props> {
                   onTileClick?.(index);
                 }
               }}
+              ref={index === 0 ? this.firstTileRef : undefined}
               selected={selectedLetterIndex === index}
               status={status}
             />

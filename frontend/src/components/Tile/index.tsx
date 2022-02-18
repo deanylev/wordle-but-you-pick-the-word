@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, Ref, forwardRef } from 'react';
 
 import { Letter } from '../Keyboard';
 
@@ -10,6 +10,7 @@ interface Props {
   bounce?: boolean;
   clickable: boolean;
   index: number;
+  innerRef: Ref<HTMLButtonElement>;
   letter: Letter | null;
   numLetters: number;
   onClick: () => void;
@@ -22,7 +23,7 @@ interface State {
   status: Status | null;
 }
 
-export default class Tile extends Component<Props, State> {
+class Tile extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -80,16 +81,19 @@ export default class Tile extends Component<Props, State> {
   }
 
   render() {
-    const { clickable, letter, onClick, selected } = this.props;
+    const { clickable, innerRef, letter, onClick, selected } = this.props;
     const { animation, status } = this.state;
     return (
       <button
         className={`Tile ${status ?? (letter ? 'pending' : 'empty')} ${animation ?? ''} ${selected ? 'selected' : ''} ${clickable && letter ? 'clickable' : ''}`}
         onClick={onClick}
         onMouseDown={(event) => event.preventDefault()}
+        ref={innerRef}
       >
         {letter ?? ''}
       </button>
     );
   }
 }
+
+export default forwardRef((props: Omit<Props, 'innerRef'>, ref: Ref<HTMLButtonElement>) => <Tile innerRef={ref} {...props} />)

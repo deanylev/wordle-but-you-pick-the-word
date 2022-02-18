@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { ChangeEvent, Component } from 'react';
 
 import { Navigate } from 'react-router-dom';
 
@@ -17,6 +17,8 @@ interface Props {
 }
 
 interface State {
+  boardHeight: number;
+  boardWidth: number;
   numLetters: number;
   realWords: boolean;
   shake: boolean;
@@ -31,6 +33,8 @@ export default class CreatePage extends Component<Props, State> {
     super(props);
 
     this.state = {
+      boardHeight: 66,
+      boardWidth: 330,
       numLetters: 5,
       realWords: false,
       shake: false,
@@ -43,6 +47,8 @@ export default class CreatePage extends Component<Props, State> {
     this.handleGetRandomWord = this.handleGetRandomWord.bind(this);
     this.handleGetTodaysWord = this.handleGetTodaysWord.bind(this);
     this.handleLetter = this.handleLetter.bind(this);
+    this.handleNumLettersChange = this.handleNumLettersChange.bind(this);
+    this.handleResize = this.handleResize.bind(this);
   }
 
   async create(word: string, realWords: boolean) {
@@ -54,6 +60,15 @@ export default class CreatePage extends Component<Props, State> {
     this.setState({
       short
     });
+  }
+
+  async componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
   }
 
   handleBackspace() {
@@ -143,8 +158,27 @@ export default class CreatePage extends Component<Props, State> {
     });
   }
 
+  handleNumLettersChange(event: ChangeEvent<HTMLSelectElement>) {
+    const numLetters =  parseInt(event.target.value, 10);
+    this.setState({
+      numLetters,
+      realWords: this.state.realWords && numLetters === 5,
+      word: this.state.word.slice(0, numLetters)
+    }, this.handleResize);
+  }
+
+  handleResize() {
+    const { numLetters } = this.state;
+    const boardWidth = Math.min(window.innerWidth - 70, 66 * numLetters);
+    const boardHeight = Math.floor(boardWidth / numLetters) - 8;
+    this.setState({
+      boardHeight,
+      boardWidth
+    });
+  }
+
   render() {
-    const { numLetters, realWords, shake, short, word } = this.state;
+    const { boardHeight, boardWidth, numLetters, realWords, shake, short, word } = this.state;
     if (short) {
       return <Navigate to={`/${short}`} />
     }
@@ -153,12 +187,23 @@ export default class CreatePage extends Component<Props, State> {
       <div className="CreatePage">
         <div className="input">
           <div className="hint">Enter a Word With the Keyboard:</div>
-          <div className="tiles">
+          <div className="tiles" style={{ height: boardHeight, width: boardWidth }}>
             <TileRow numLetters={numLetters} shake={shake} word={word} />
+          </div>
+          <div className="numLetters">
+            Number of Letters:
+            <select onChange={this.handleNumLettersChange} value={numLetters}>
+              <option value={3}>3</option>
+              <option value={4}>4</option>
+              <option value={5}>5</option>
+              <option value={6}>6</option>
+              <option value={7}>7</option>
+              <option value={8}>8</option>
+            </select>
           </div>
           <label>
             Restrict to Real Words?
-            <input checked={realWords} onChange={() => this.setState({ realWords: !realWords })} type="checkbox" />
+            <input checked={realWords} disabled={numLetters !== 5} onChange={() => this.setState({ realWords: !realWords })} type="checkbox" />
           </label>
           <div className="or">OR</div>
           <button onClick={this.handleGetRandomWord} onMouseDown={(event) => event.preventDefault()}>Get Random Word</button>

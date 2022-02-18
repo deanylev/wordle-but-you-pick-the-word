@@ -52,7 +52,7 @@
   box-sizing: content-box;
   color: var(--text-colour);
   display: flex;
-  font-size: 32px;
+  font-size: inherit;
   font-weight: 700;
   height: 100%;
   justify-content: center;
@@ -60,18 +60,6 @@
   text-transform: uppercase;
   transition: transform 0.05s;
   width: 100%;
-
-  @media only screen and (max-height: 800px) {
-    font-size: 25px;
-  }
-
-  @media only screen and (max-height: 650px) {
-    font-size: 20px;
-  }
-
-  @media only screen and (max-height: 620px) {
-    font-size: 15px;
-  }
 
   &.absent {
     background: var(--absent-colour);

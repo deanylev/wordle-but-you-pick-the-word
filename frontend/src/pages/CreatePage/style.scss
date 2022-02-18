@@ -10,25 +10,22 @@
     flex: 1;
     padding-top: 120px;
     text-align: center;
-    width: 330px;
 
     @media only screen and (max-height: 650px) {
       padding-top: 50px;
-      width: 264px;
-
-      > .tiles {
-        height: 46.8px;
-      }
-    }
-
-    @media only screen and (min-height: 651px) {
-      > .tiles {
-        height: 58.5px;
-      }
     }
 
     > .tiles {
+      margin: 0 auto;
       padding: 20px 0;
+    }
+
+    > .numLetters {
+      padding: 5px 0;
+
+      > select {
+        margin-left: 5px;
+      }
     }
 
     > label {
@@ -45,6 +42,10 @@
       font-size: 20px;
       font-weight: bold;
       margin: 25px 0;
+
+      @media only screen and (max-height: 650px) {
+        margin: 15px 0;
+      }
     }
 
     > button {
@@ -59,7 +60,6 @@
 
 
       @media only screen and (max-height: 650px) {
-        margin: 5px 0;
         padding: 10px;
       }
     }
