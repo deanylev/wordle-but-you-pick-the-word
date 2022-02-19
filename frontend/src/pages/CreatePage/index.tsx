@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom';
 import Keyboard, { Letter } from '../../components/Keyboard';
 import TileRow from '../../components/TileRow';
 import { OnToast } from '../../components/Toaster';
-import allWords from '../../globals/allWords';
+import includes from '../../globals/allWords';
 import viableWords from '../../globals/viableWords';
 import fetchApi from '../../utils/fetchApi';
 import getRandomElement from '../../utils/getRandomElement';
@@ -102,7 +102,7 @@ export default class CreatePage extends Component<Props, State> {
     }
 
     const joinedWord = word.join('');
-    if (realWords && !allWords.includes(joinedWord)) {
+    if (realWords && !includes(joinedWord)) {
       this.props.onToast('Not in word list');
       shake();
       return;
@@ -162,7 +162,6 @@ export default class CreatePage extends Component<Props, State> {
     const numLetters =  parseInt(event.target.value, 10);
     this.setState({
       numLetters,
-      realWords: this.state.realWords && numLetters === 5,
       word: this.state.word.slice(0, numLetters)
     }, this.handleResize);
   }
@@ -203,10 +202,10 @@ export default class CreatePage extends Component<Props, State> {
           </div>
           <label>
             Restrict to Real Words?
-            <input checked={realWords} disabled={numLetters !== 5} onChange={() => this.setState({ realWords: !realWords })} type="checkbox" />
+            <input checked={realWords} onChange={() => this.setState({ realWords: !realWords })} type="checkbox" />
           </label>
           <div className="or">OR</div>
-          <button onClick={this.handleGetRandomWord} onMouseDown={(event) => event.preventDefault()}>Get Random Word</button>
+          <button onClick={this.handleGetRandomWord} onMouseDown={(event) => event.preventDefault()}>Get Random 5 Letter Word</button>
           <button onClick={this.handleGetTodaysWord} onMouseDown={(event) => event.preventDefault()}>Get Today's Word</button>
         </div>
         <Keyboard
