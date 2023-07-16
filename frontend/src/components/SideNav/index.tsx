@@ -108,13 +108,17 @@ export default class SideNav extends Component<Props, State> {
                 <img alt="Genius Quote Finder" src="/images/geniusquotefinder.ico" />
                 Genius Quote Finder
               </a>
-              <a href="https://awesomemediadownloader.xyz" rel="noreferrer" target="_blank">
-                <img alt="Awesome Media Downloader" src="/images/awesomemediadownloader.ico" />
-                Awesome Media Downloader
+              <a href="https://whosleepswhere.com" rel="noreferrer" target="_blank">
+                <img alt="Who Sleeps Where?" src="/images/whosleepswhere.ico" />
+                Who Sleeps Where?
               </a>
               <a href="https://improveyourmood.xyz" rel="noreferrer" target="_blank">
                 <img alt="Improve Your Mood" src="/images/improveyourmood.ico" />
                 Improve Your Mood
+              </a>
+              <a href="https://awesomemediadownloader.xyz" rel="noreferrer" target="_blank">
+                <img alt="Awesome Media Downloader" src="/images/awesomemediadownloader.ico" />
+                Awesome Media Downloader
               </a>
               <a href="https://deanlevinson.com.au/#/portfolio" rel="noreferrer" target="_blank">
                 <div />
