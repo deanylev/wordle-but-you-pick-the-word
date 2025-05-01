@@ -5,10 +5,10 @@ import { AddressInfo } from 'net';
 import includes from './frontend/src/globals/allWords';
 
 // third party libraries
+import { booleanP, objectP, stringP } from '@viviedu/type-proxy';
 import cors from 'cors';
 import express from 'express';
 import { createPool, RowDataPacket } from 'mysql2/promise';
-import { booleanP, objectP, stringP } from 'type-proxy';
 import { v4 } from 'uuid';
 
 // constants
